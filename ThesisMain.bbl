@@ -1,0 +1,43 @@
+\begin{thebibliography}{1}
+
+\bibitem{aydemir2012kinect}
+A.~Aydemir, D.~Henell, P.~Jensfelt, and R.~Shilkrot.
+\newblock Kinect@ home: Crowdsourcing a large 3d dataset of real environments.
+\newblock In {\em 2012 AAAI Spring Symposium Series}, 2012.
+
+\bibitem{LIBSVM}
+Chih-Chung Chang and Chih-Jen Lin.
+\newblock {LIBSVM}: A library for support vector machines.
+\newblock {\em ACM Transactions on Intelligent Systems and Technology},
+  2:27:1--27:27, 2011.
+\newblock Software available at \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm}.
+
+\bibitem{RGBDSLAM}
+"Nikolas Engelhard, Felix Endres, J{\"u}rgen Hess, J{\"u}rgen Sturm, and
+  Wolfram Burgard".
+\newblock "real-time 3d visual slam with a hand-held rgb-d camera".
+\newblock In {\em "Proc. of the RGB-D Workshop on 3D Perception in Robotics at
+  the European Robotics Forum"}, "Vasteras, Sweden", "April" "2011".
+
+\bibitem{eigenweb}
+Ga\"{e}l Guennebaud, Beno\^{i}t Jacob, et~al.
+\newblock Eigen v3.
+\newblock http://eigen.tuxfamily.org, 2010.
+
+\bibitem{VFH_Definition}
+"Radu~Bogdan Rusu, Gary Bradski, Romain Thibaux, and John Hsu".
+\newblock "estimating vfh signatures for a set of points".
+
+\bibitem{Rusu_ICRA2011_PCL}
+Radu~Bogdan Rusu and Steve Cousins.
+\newblock {3D is here: Point Cloud Library (PCL)}.
+\newblock In {\em {IEEE International Conference on Robotics and Automation
+  (ICRA)}}, Shanghai, China, May 9-13 2011.
+
+\bibitem{5651280}
+R.B. Rusu, G.~Bradski, R.~Thibaux, and J.~Hsu.
+\newblock Fast 3d recognition and pose using the viewpoint feature histogram.
+\newblock In {\em Intelligent Robots and Systems (IROS), 2010 IEEE/RSJ
+  International Conference on}, pages 2155 --2162, oct. 2010.
+
+\end{thebibliography}

@@ -1,0 +1,55 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: ThesisMain.aux
+A level-1 auxiliary file: title.aux
+A level-1 auxiliary file: abstract.aux
+A level-1 auxiliary file: acknowledgements.aux
+A level-1 auxiliary file: contents.aux
+A level-1 auxiliary file: Introduction.aux
+A level-1 auxiliary file: ModelingObjectContext.aux
+A level-1 auxiliary file: 3DModelofObjectContext.aux
+A level-1 auxiliary file: UsingObjectContextforPlaceClassification.aux
+A level-1 auxiliary file: Conclusion.aux
+A level-1 auxiliary file: backmatter.aux
+The style file: plain.bst
+Database file #1: Biblio.bib
+You've used 7 entries,
+            2118 wiz_defined-function locations,
+            550 strings with 5547 characters,
+and the built_in function-call counts, 2500 in all, are:
+= -- 230
+> -- 141
+< -- 1
++ -- 55
+- -- 48
+* -- 164
+:= -- 411
+add.period$ -- 21
+call.type$ -- 7
+change.case$ -- 44
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 94
+empty$ -- 200
+format.name$ -- 48
+if$ -- 531
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 5
+newline$ -- 38
+num.names$ -- 14
+pop$ -- 64
+preamble$ -- 1
+purify$ -- 37
+quote$ -- 0
+skip$ -- 70
+stack$ -- 0
+substring$ -- 110
+swap$ -- 22
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 28
+warning$ -- 0
+while$ -- 18
+width$ -- 8
+write$ -- 75

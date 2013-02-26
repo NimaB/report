@@ -1,0 +1,9 @@
+%-------------------------------------------------------------------------------
+\cleardoublepage
+\phantomsection
+\pdfbookmark[0]{Acknowledgements}{acknowledgements}
+\chapter*{Acknowledgements}
+%-------------------------------------------------------------------------------
+
+Great Thanks to my supervisors, Andrzej and Todor and also Professor Lilienthal who introduced me to the world of computer vision.
+Special thanks to my parents and my lovely fiancee for their kindness and support.  

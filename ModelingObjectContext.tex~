@@ -1,0 +1,156 @@
+%------------------------------------------------------------------------
+\Chapter{Modeling Object Context}
+\label{ModelingObjectContext.ch}
+%------------------------------------------------------------------------
+\section{Problem Statement}
+\label{ProblemStatement.sec}
+% here we need to define context of objects
+%learn the model
+As discussed in the previous Chapter, in order to facilitate object detection and provide a means to classify places based on key objects 
+for a place category, in this thesis we proposed a structure and a method to build models for object context. 
+%In this thesis we present an idea and a model to represent 3D context of object. As discussed in previous chapter, This model is 
+%a very useful tool for both object detection and place categorization in which object information is used.
+
+Based on the definition stated in Chapter \ref{Introduction.ch}, by context of the object we are referring to the surfaces surrounding it. 
+The problem that is addressed in this research, is how to define suitable features to represent those surfaces 
+as the context of the object class. 
+The trained model would be applied on pointclouds of new scenes to determine locations in the scene that are likely
+to contain the object.
+The expected result, is a prediction probability for all regions in a pointcloud that corresponds to the likelihood 
+of object being present.
+
+
+
+
+
+\section{Motivation and Applications}
+\label{MotivationandApplications.sec}
+The main motive for this work is achieving a complete and robust 3D descriptor for places. 
+When a human agent enters a room, he is able to decide about the category of the place based on a simple and shallow perception, 
+with a good confidence. 
+Even if the room is not furnished yet and there is not many objects in it to help the agent in determining its category. 
+
+Although, the Context Model, which we are talking about in this work, is not enough for making this decision, but is a useful 
+prior.
+Among the applications that is considerable for the model, most obvious ones are as follows:
+
+
+\subsubsection*{Object Detection}
+
+Object detection is an expensive and complex task. Scale of the object is an issue here. Searching for context of 
+an object is significantly easier than the object itself, particularly when the searched object is in a rather small scale. 
+When the context is detected, then the search for the actual object is done in a reduced area, where is predicted as the context. 
+Scale selection in object detection is another problem that detecting the context can diminish it.  
+
+In addition, false positives are avoided or at least reduced. When a table is detected as the context for a cup, a cup like object 
+which is located on the floor is not predicted as a positive detection.    
+
+\subsubsection*{Place Classification}
+ 
+      A very important piece of information that can help a robotic system to be able to distinguish between different place categories 
+is knowing about the objects which are expected to be found in a specific category of a place. 
+
+If the robot is looking for a kitchen, it helps if it knows about some objects that are most probable to be found in it and 
+perhaps not in other places. 
+For instance a kitchen sink is such a discriminative object. 
+If the robot can find such an object in a place, it can obtain a good confidence about that place to be a kitchen. 
+
+{\bf\it Viswanathan et al.} in \cite{P.Viswanathan}, also  pointed to the fact that object detection is a good prior for place 
+categorization. {\bf\it T. Southey and J. J. Little} in \cite{southey2006object} argued that, {\it rooms} are defined by their geometric 
+properties, while definition of {\it places} is based on objects they contain and activities takes place in them.  
+
+On the other hand, the place classification system would be more robust if it is able to recognize the place, using object information, 
+even when the actual object is not present in the place, but the presence is expected.
+Here is where the contextual model of object finds it's application. When the context is present, there is no need to detect the actual 
+object for the purpose of classifying the place.
+
+ 
+ 
+ \subsubsection*{Object Placement} 
+ 
+ When a robot needs to put an object in a suitable place, benefiting from object context information, it needs only to search for 
+ matches for the context of the object it is holding. 
+ 
+
+\section{Challenges}
+\label{Challenges.sec}
+
+\subsection{Challenges Related to Applications }%(Where context can help)}
+\label{ChallengesRelatedtoApplications.ssec}
+
+\subsubsection{Place Classification}
+\label{placeclassification.ssec}
+% when we have a context model of key objects for a place class we would have a much simpler job to decide about class of 
+% the place based on those context rather than objects themselves. If in the search time the key objects are not present 
+% in the scene most probability the contexts would be present. 
+Finding object classes which are discriminative for places is not easy for all place categories. In addition, context model
+for different object classes can be similar which decreases certainty of place classification.  
+
+\subsubsection{Object Detection}
+\label{objectdetection.ssec}
+Object detection can be challenging when the size of the object compared to the size of the scene is very small. 
+Illumination conditions, occlusion and pose of the object can affect the time needed for the search and performance of the system. 
+
+Identifying potential locations for the object within the scene can drastically reduce the search space. 
+Detecting a table as a context for cups is easier due to its scale and is less affected by illumination and 
+occlusion. 
+When the table is detected, recognizing objects on the table is facilitated regardless of the challenges mentioned above.
+
+\subsubsection{Where to put the Object}
+\label{wheretoputtheobject.ssec}
+% In tasks that involve robot to put an item it is carrying to some location , it is needed to provide information to the 
+% robot about where is suitable place to put that type of object, context model is a very good tool in this scenario.
+If the context model provided for an object class, which a robot wants to find a place to put it, is not general enough
+it can cause a problem. For instance, in a scenario that a robot is looking for any suitable surface, on which it is possible 
+to put a cup, if the context model is just suggesting a table as a suitable place, it confuses the robot. 
+There may be no table around, but flat surfaces which can hold a cup.
+
+\subsection{Challenges Related to Modeling the Object Context}
+
+There are challenges regarding modeling the object context that follows:
+
+\begin{itemize}
+ \item The ability of the features to separate context from non-context points. The features that are used to train the context model
+   should be discriminative to some extent. The context, as is described in Chapter \ref{Introduction.ch}, usually is not a single
+   body. It consists of separate surfaces or even objects, which reduces the distinctiveness of the features.  
+   
+ \item Employing a train set without enough generalization. There could be situations and scenes which are completely different from
+	what have been considered in train set to build the context model.
+	
+ \item The quality of pointclouds is a critical issue. The amount of smoothness in the pointcloud and missing points have a 
+ significant effect on the extracted features, which are used to describe surfaces, and as a result, on the context model. 
+ When pointclouds are being captured, if due to the viewpoints of the sensor some parts of a surface are occluded, 
+ the resulting pointcloud might lack important points.
+ The geometry that is extracted from such surfaces is not accurate and in some cases are wrong.
+ 
+\end{itemize}
+
+% First Challenge was the feature to use in building the model, looked into different feature types and also different combinations 
+% of features to get a suitable construction for our purpose. 
+% Another issue was deciding about what to be considered as the context for the object, 
+% we needed to reach a fine structure for from where and how to extract features for each object.
+% 
+% After deciding about the structure of the feature vector it was also needed to do some pre-process on the raw data we had 
+% before extracting the features, the details would be described in chapter \ref{3DModelofObjectContext.ch}.
+% 
+% for training the model we needed annotated data, in the platform I was using there was no suitable annotation tool so 
+% I needed to develop one. Then choosing suitable kernels for SVM as the learning method I chose, also parameters each 
+% of which had a very significant effect on the results.
+% 
+% a big issue here was the fact that, we were receiving a lot of non context samples (we will call them as negative samples) 
+% from the annotations and a few context samples (Positive). There could be samples among negative dataset which are quite 
+% similar to positive ones based on their feature values which are labeled as negative just because were not extracted from 
+% the annotated region. This can cause confusion for the classifier. More details would be discussed in Chapter \ref{3DModelofObjectContext.ch}
+
+\subsection{2D vs 3D context, benefits of 3D}
+popularity of devices such as Microsoft Kinect, has made 3D data widely accessible. 
+Therefore, many researchers and academics have shown great desire to use 3D information in their researches, 
+which gives a lot more information about our surrounding compared to 2D data. 
+Using 3D data has made it simple to capture geometrical information in addition to visual properties. 
+From the output of this type of sensors, we can easily and directly have access to depth information and 3D 
+coordinates of any points that are perceived.
+
+Geometrical features, which are obtained from 3D information, enhances performance of systems significantly in tasks like feature 
+based object detection compared to relying only on visual information. 
+Particularly, in the problem we are dealing with, to build a model for object context, depending on features which only encode 
+changes in intensity and color is not enough. The surfaces needed to be studied, 3D information facilitate and improves this study.  
