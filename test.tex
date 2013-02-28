@@ -3,23 +3,25 @@
 \label{Introduction.ch}
 %------------------------------------------------------------------------
 A stereotypical image of a robot is a humanoid in a servant costume which can do all the chores at home and perhaps even more. 
-This is not too far from scientific projects which are being run in research labs. 
+%This is not too far from scientific projects which are being run in research labs. 
 Assuming such goal, human behavior becomes a natural inspiration for the algorithms governing the behavior of a robot in the 
 assigned tasks and situations.
-Imagining a simple but common task of find-and-fetch, first solution that could be thought of, is to learn how exactly a human 
-would perform the task. 
+Imagining a simple but common task of find-and-fetch, in witch a mobile robot is asked to find an object and bring it 
+to the user. 
+The first solution that could be thought of, is to learn how exactly a human would perform the task. 
 Then, how the procedure can be translated to an algorithm executable on a robotic system.
 % But trying to make a system to imitate human behavior to perform a task, is not always the best solution. 
 % As our system usually has different qualifications and also limits compared to a human body. 
-% Moreover , it is not always easy to understand how a human really performs a task, and how the brain make decisions. 
+% Moreover, it is not always easy to understand how a human really performs a task, and how the brain make decisions. 
 % But it can always give a good idea to start with.
-Often such translation can not be direct due to the differences in embodiments and lack of complete understanding of underlying 
-processes. 
+Often such translation can not be direct due to the differences in embodiments and lack of complete understanding of 
+underlying processes. 
 
-In case of the find-and-fetch task, a human is likely to imagine what does the target object look like, where and it what situation 
-it is often found.
+In case of the find-and-fetch task, if it is assigned to a human agent, he is likely to imagine what does the target 
+object look like, where and in what situation it is often found.
 If the object is known, a natural behavior is to visit the most probable location for the object first.
-only in the worst case scenario and without the knowledge of the object, one would perform a thorough search of the whole scene.
+Only in the worst case scenario and without the knowledge of the object, one would perform a thorough search of the 
+whole scene.
 In other words, the strategy depends on the amount of information about the target object. 
 %Returning to our Find-and-fetch task; When such a task is given to a human, The first step for him 
 %would be imagining what does the asked object look like and where and in what situation it is supposed to be located.
@@ -28,7 +30,7 @@ In other words, the strategy depends on the amount of information about the targ
 %If he does not have any information about the object, first he needs to get some from a description or a picture of it.
 %Then he gets some information about possible locations as well. It would be the worst case that he starts just by looking
 %everywhere for something similar to the seen picture or heard description. 
-%Depending on amount of information he has ,the amount of time he will need to find the object is different.
+%Depending on amount of information he has,the amount of time he will need to find the object is different.
 
 A similar behavior could be implemented on a mobile robot. 
 A valuable prior knowledge for an object detection/recognition problem could be semantic knowledge about places and possible context for the object, 
@@ -60,8 +62,8 @@ $kitchen$ $sink$ and the wall behind it. (Figure ~\ref{contextExample.figure})
 \label{Contributions.sec}
 %----------------------------------------------------------------------------
 
-In this work, we propose a method to build 3D models of object context, which not only can be used as a prior to an object detector,
-but also as a useful knowledge in building 3D representation for places. 
+In this work, we propose a method to build models of 3D object context, which not only can be used as a prior to an 
+object detector, but also as a useful knowledge in building 3D representation for places. 
 Benefiting from this model, the area needed to be searched in an object detection task can be reduced to parts of the scene with high 
 probability of being the context for the object of interest. 
 It can also have a positive effect on number of true positive in prediction results. 
@@ -69,7 +71,7 @@ Combining the information encoded in this model with other features and structur
 result in a representation for places.
  
  To build Object context models we applied supervised learning methods on data extracted from manually annotated objects in 
- point-clouds. Point-closed that we used as input are ful 3D representaions of a place such as an office, a kitchen, etc. 
+ point-clouds. Point-closed that we used as input are full 3D representations of a place such as an office, a kitchen, etc. 
  The learning  is done on features which are representing local geometry and spacial location of object context.
  
  Most important points about this work ca be briefly mentioned as follows:
@@ -88,7 +90,7 @@ Applications in place classification would be discussed later in chapter \ref{Us
 
 \section {Related Work}
 \label{RelatedWork.sec}
-     In this section, some related works focusing on using contextual information for object detection/recognition 
+     In this Section, some related works focusing on using contextual information for object detection/recognition 
      or place classification are briefly reviewed. 
      Moreover, other works which contribute 3D features and descriptors for similar purposes are mentioned.
      
@@ -119,14 +121,18 @@ Applications in place classification would be discussed later in chapter \ref{Us
     In \cite{Vasudevan2008522}, Vasudevan and Siegwart proposed a representation for space based on objects. 
     The authors discuss several algorithms, some of which only uses object category presence and some are more sophisticated using both 
     objects and their relationships and also spacial structure of places.
+    
+    More researches are discussed later in Chapter \ref{UsingObjectContextforPlaceClassification.ch} which is 
+    specifically devoted to this particular application.
      
 \section {Outline}
 \label{Outline.sec}
 The rest of this thesis is structured as follows:
-In chapter \ref{ModelingObjectContext.ch}, the problem definition and more about motivation, applications and challenges would be 
-presented.
-chapter\ref{3DModelofObjectContext.ch}, dwscribes our method and details about implementation, experiments and evaluation. 
-In chapter\ref{UsingObjectContextforPlaceClassification.ch}, applications of our model and descriptor in place classification is 
+In Chapter \ref{ModelingObjectContext.ch}, the problem definition and more about motivation, applications and 
+challenges are presented.
+Chapter\ref{3DModelofObjectContext.ch}, describes our method and details about implementation, experiments and evaluation. 
+In Chapter\ref{UsingObjectContextforPlaceClassification.ch}, applications of our model and descriptor in place classification is 
 discussed and an analytical study is done for the results that could be expected for this application.
-Finally, we have a review while next steps that could be considered for this work and possible improvements 
-and also future works are mentioned in \ref{Conclusion.ch}.
+Finally, we have a review while next steps that could be considered for this work, possible improvements 
+and also future works are mentioned in Chapter \ref{Conclusion.ch}.
+

@@ -14,7 +14,7 @@ such as $kitchen$ or $corridor$, provides a more clear idea of its location than
 
 Regarding Object detection, having semantic information of a place in association with a ground truth about the objects expected
 to be present in that place, makes the search for an object faster and more successful.
-In other words, it helps robotic systems to communicate with humans and interpret environments built by and for them.
+It helps robotic systems to communicate with humans and interpret environments built by and for them.
 
 Concepts such as $office$ or $kitchen$ are different categories for a room based on its functionality.
 Other features categorized based on its spatial properties such as its shape, size or general appearance.
@@ -28,7 +28,7 @@ a more robust and complete representation for places would be achieved.
 \begin{figure}[t]
   \centerpsw{semanticmapping}{0.85\columnwidth}
   \caption[Overview of a semantic mapping system]
-  {Overview of a semantic mapping system by Dr. Pronobis in \cite{pronobis2011phd}(best viewed in color).}
+  {Overview of a semantic mapping system by Pronobis in \cite{pronobis2011phd}(best viewed in color).}
   \label{semanticmapping.figure}
 \end{figure}
 
@@ -36,7 +36,7 @@ a more robust and complete representation for places would be achieved.
 \label{OverviewPlaceClassification.sec}
  Place categorization based on vision in its first stages was focused on classifying single 2D images of an indoor or 
  outdoor scene.
- Data achieved from laser range sensors were also popular due to their robustness to environmental variations and faster process time
+ Data achieved from laser range sensors are also popular due to their robustness to environmental variations and faster process time
  .\cite{pronobis2011phd}
  Several researchers in computer vision community addressed the problem of place classification, some examples are 
  reviewed here.
@@ -78,8 +78,11 @@ Object detection in association of a common-sense knowledge database completes t
  
 \section{Ground Truth}
 \label{GroundTruth.sec}
-As mentioned before, a ground truth or common-sense knowledge database is needed to make the relation between the class of a place and object contexts present in it.
-This knowledge can be achieved by analyzing available common-sense knowledge databases like \bf{Open Mind} \cite{OpenMind}, popular search engines such as Google Image Search, image repositories like Flicker or directly from a human user inputs. 
+As mentioned before, a ground truth is needed to make the relation between the class of a place and object contexts 
+present in it.
+This knowledge can be achieved by analyzing available common-sense knowledge databases like \bf{Open Mind} \cite{OpenMind}, 
+popular search engines such as Google Image Search, image repositories like Flicker or directly from a human user 
+inputs. 
 
 Viswanathan et al. in \cite{P.Viswanathan}, have performed an automated learning of object-place relations on an on-line annotated database such as $Label$ $me$. 
 Then object detectors are trained on some of the most frequently occurring objects.
@@ -122,7 +125,8 @@ A normalized weight can be computed based on this analysis for each object categ
 \label{BenefitsofObjectContextforPlaceClassification.sec}
 Some of the benefits of employing $context$ $models$ in place classification can be briefly mentioned as follows: 
 \begin{itemize}
- \item It provides a simple way to include human annotations into place representation.
+ \item It provides a simple way to include human annotations from common-sense knowledge bases into place 
+ representation.
  \item It is a way of including spatial relations into place representation.
  \item It is a way to make place models more universal.
  \item It brings in object information while no fine grained object detection is needed.
