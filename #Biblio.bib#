@@ -1,0 +1,305 @@
+%---------------------------------------------------------------------------------
+%VFH application
+@INPROCEEDINGS{5651280, 
+author={Rusu, R.B. and Bradski, G. and Thibaux, R. and Hsu, J.}, 
+booktitle={Intelligent Robots and Systems (IROS), 2010 IEEE/RSJ International Conference on}, title={Fast 3D recognition and pose using the Viewpoint Feature Histogram}, 
+year={2010}, 
+month={oct.}, 
+volume={}, 
+number={}, 
+pages={2155 -2162}, 
+keywords={cameras;feature extraction;manipulators;mobile robots;object recognition;pose estimation;robot vision;solid modelling;3D object recognition;3D point cloud data;VFH;pose estimation;robot manipulation;stereo camera;viewpoint feature histogram;}, 
+doi={10.1109/IROS.2010.5651280}, 
+ISSN={2153-0858},}
+
+%---------------------------------------------------------------------------------
+%PCL
+@InProceedings{Rusu_ICRA2011_PCL,
+  author    = {Radu Bogdan Rusu and Steve Cousins},
+  title     = {{3D is here: Point Cloud Library (PCL)}},
+  booktitle = {{IEEE International Conference on Robotics and Automation (ICRA)}},
+  month     = {May 9-13},
+  year      = {2011},
+  address   = {Shanghai, China}
+}
+
+%---------------------------------------------------------------------------------
+%VFH in pointcloud website
+@MISC{VFH_Definition,
+  title =	{"Estimating VFH signatures for a set of points"},
+  author =	{"Radu Bogdan Rusu and Gary Bradski and Romain Thibaux and John Hsu"},
+  url =	{"http://pointclouds.org/documentation/tutorials/vfh_estimation.php vfh-estimation"},
+}
+
+%---------------------------------------------------------------------------------
+%FPFH in pointcloud website
+@MISC{FPFH_Definition,
+  title ={Pointclouds.org ,Estimating FPFH},
+  author ={R.B Rusu Blodow Nico Beetz Michael},
+  howpublished = {\url{http://www.pointclouds.org/documentation/tutorials/fpfh_estimation.php fpfh-estimation}}
+}
+
+%---------------------------------------------------------------------------------
+%Eigen
+ @MISC{eigenweb,
+  author = {Ga\"{e}l Guennebaud and Beno\^{i}t Jacob and others},
+  title = {Eigen v3},
+  howpublished = {\url{http://eigen.tuxfamily.org}},
+  year = {2010}
+ }
+ 
+%---------------------------------------------------------------------------------
+ %LIBSVM
+ @article{LIBSVM,
+ author = {Chang, Chih-Chung and Lin, Chih-Jen},
+ title = {{LIBSVM}: A library for support vector machines},
+ journal = {ACM Transactions on Intelligent Systems and Technology},
+ volume = {2},
+ issue = {3},
+ year = {2011},
+ pages = {27:1--27:27},
+ note =	 {Software available at \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm}}
+}
+
+%---------------------------------------------------------------------------------
+%Kinect at home
+@inproceedings{aydemir2012kinect,
+title={Kinect@ Home: Crowdsourcing a Large 3D Dataset of Real Environments},
+author={Aydemir, A. and Henell, D. and Jensfelt, P. and Shilkrot, R.},
+booktitle={2012 AAAI Spring Symposium Series},
+year={2012}, url={http://www.csc.kth.se/~aydemir/paper_pdfs/2012.aaai.kinectathome.pdf}
+}
+
+%---------------------------------------------------------------------------------
+%RGBDSLAM
+@InProceedings{ RGBDSLAM,
+    TITLE = {"Real-time 3D visual SLAM with a hand-held RGB-D camera"},
+    AUTHOR = {"Nikolas Engelhard and Felix Endres and J{\"u}rgen Hess and J{\"u}rgen Sturm and Wolfram Burgard"},
+    BOOKTITLE = {"Proc. of the RGB-D Workshop on 3D Perception in Robotics at the European Robotics Forum"},
+    ADDRESS = {"Vasteras, Sweden"},
+    YEAR = {"2011"},
+    MONTH = {"April"},
+}
+%---------------------------------------------------------------------------------
+@article{eyeMovement,
+         author = {Torralba, A. and Oliva, A. and Castelhano, M. S. and Henderson, J. M.},
+	journal = {Psychological Review},
+	month = {October},
+	number = {4},
+	pages = {766--786},
+	title = {Contextual guidance of eye movements and attention in real-world scenes: the role of global features in object search.},
+	volume = {113},
+	year = {2006}
+}
+
+%-----------------------------------------------------------------------
+%related work 
+@INPROCEEDINGS{TrollbaContexBased,
+author={Torralba, A. and Murphy, K.P. and Freeman, W.T. and Rubin, M.A.},
+booktitle={Computer Vision, 2003. Proceedings. Ninth IEEE International Conference on}, title={Context-based vision system for place and object recognition},
+year={2003},
+month={oct.},
+volume={},
+number={},
+pages={273 -280 vol.1},
+keywords={Artificial intelligence;Face recognition;Image recognition;Image representation;Layout;Machine vision;Mobile robots;Navigation;Object recognition;Robot kinematics;image representation;mobile robots;object detection;object recognition;robot vision;context-based vision system;image categorization;low-dimensional global image representation;mobile system;object recognition;place recognition;realtime feedback;},
+doi={10.1109/ICCV.2003.1238354},
+ISSN={},}
+
+%----------------------------------------------------------------------
+@article{TorralbaContextualPriming,
+year={2003},
+issn={0920-5691},
+journal={International Journal of Computer Vision},
+volume={53},
+issue={2},
+doi={10.1023/A:1023052124951},
+title={Contextual Priming for Object Detection},
+url={http://dx.doi.org/10.1023/A\%3A1023052124951},
+publisher={Kluwer Academic Publishers},
+keywords={context; object recognition; focus of attention; automatic scale selection; object priming},
+author={Torralba, Antonio},
+pages={169-191},
+language={English}
+}
+%----------------------------------------------------------------------
+@misc{quattoni2009recognizing,
+  title={Recognizing indoor scenes},
+  author={Quattoni, Ariadna and Torralba, Antonio},
+  year={2009}
+}
+
+%----------------------------------------------------------------------
+@incollection{PerkoLeonardisContextDriven,
+year={2007},
+isbn={978-3-540-77342-9},
+booktitle={Attention in Cognitive Systems. Theories and Systems from an Interdisciplinary Viewpoint},
+volume={4840},
+series={Lecture Notes in Computer Science},
+editor={Paletta, Lucas and Rome, Erich},
+doi={10.1007/978-3-540-77343-6_14},
+title={Context Driven Focus of Attention for Object Detection},
+url={http://dx.doi.org/10.1007/978-3-540-77343-6_14},
+publisher={Springer Berlin Heidelberg},
+author={Perko, Roland and Leonardis, Aleš},
+pages={216-233}
+}
+
+%----------------------------------------------------------------------
+@inproceedings{aydemir2012_3Dcontext,
+  title = {Exploiting and modeling local 3D structure for predicting object locations},
+  author = {Aydemir, A. and Jensfelt, P.},
+  booktitle = {2012 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  year = {2012},
+  organization = {IEEE}
+}
+%----------------------------------------------------------------------
+@article{Vasudevan2008522,
+title = "Bayesian space conceptualization and place classification for semantic maps in mobile robotics",
+journal = "Robotics and Autonomous Systems",
+volume = "56",
+number = "6",
+pages = "522 - 537",
+year = "2008",
+note = "<ce:title>From Sensors to Human Spatial Concepts</ce:title>",
+issn = "0921-8890",
+doi = "10.1016/j.robot.2008.03.005",
+url = "http://www.sciencedirect.com/science/article/pii/S092188900800033X",
+author = "Shrihari Vasudevan and Roland Siegwart",
+keywords = "Conceptualization of space",
+keywords = "Place classification",
+keywords = "Bayesian inference",
+keywords = "Spatial cognition",
+keywords = "Robot mapping",
+keywords = "Semantic mapping"
+}
+%------------------------------------------------------------------
+@article{Vasudevan2007359,
+title = "Cognitive maps for mobile robots an object based approach",
+journal = "Robotics and Autonomous Systems",
+volume = "55",
+number = "5",
+pages = "359-371",
+year = "2007",
+note = "<ce:title>From Sensors to Human Spatial Concepts</ce:title>",
+issn = "0921-8890",
+doi = "10.1016/j.robot.2006.12.008",
+url = "http://www.sciencedirect.com/science/article/pii/S0921889006002004",
+author = "Shrihari Vasudevan and Stefan Gächter and Viet Nguyen and Roland Siegwart",
+keywords = "Robot mapping",
+keywords = "Cognitive spatial representation",
+keywords = "Conceptualization of space",
+keywords = "Spatial cognition"
+}
+
+
+%----------------------------------------------------------------------
+@INPROCEEDINGS{P.Viswanathan, 
+author={Viswanathan, P. and Southey, T. and Little, J.J. and Mackworth, A.}, 
+booktitle={Computer and Robot Vision (CRV), 2010 Canadian Conference on}, title={Automated Place Classification Using Object Detection}, 
+year={2010}, 
+month={31 2010-june 2}, 
+volume={}, 
+number={}, 
+pages={324 -330}, 
+keywords={Detectors;Humans;Image databases;Layout;Object detection;Object recognition;Robot vision systems;Robotics and automation;Training data;Visual databases;image classification;object detection;automated learning;automated place classification;object-place relations;online annotated database;state-of-the-art object detection technique;Object Detection;Scene Classification;Visual Place Categorization;}, 
+doi={10.1109/CRV.2010.49}, 
+ISSN={}
+}
+%----------------------------------------------------------------------
+@inproceedings{southey2006object,
+  title={Object discovery through motion, appearance and shape},
+  author={Southey, T. and Little, J.J.},
+  booktitle={AAAI Workshop on Cognitive Robotics, Technical Report WS-06-03. AAAI Press},
+  year={2006}
+}
+
+%----------------------------------------------------------------------
+@MISC{AnnotationGithub,
+  title ={Point cloud Annotation tool},
+  author ={Nima Behzad},
+  howpublished = {\url{git@github.com:NimaB/PointCloud--Annotation.git}},
+  year = {2012}
+}
+
+%----------------------------------------------------------------------
+@inproceedings{li2010holistic,
+	author = {Li, Fuxin and Carreira, Jo{\~a}o and Sminchisescu, Cristian},
+	title = {Object Recognition as Ranking Holistic Figure-Ground Hypotheses},
+	booktitle = {CVPR},
+	year = {2010}
+}
+%-----------------------------------------------------------------------
+@phdthesis{pronobis2011phd,
+  author = {Pronobis, Andrzej},
+  title = {Semantic Mapping with Mobile Robots},
+  school = {KTH Royal Institute of Technology},
+  address = {Stockholm, Sweden},
+  month = {jun},
+  year = {2011},
+  isbn = {ISBN 978-91-7501-039-7},
+  issn = {ISSN-1653-5723},
+  url = {http://www.pronobis.pro/phd}
+}
+%------------------------------------------------------------------------
+@MISC{OpenMind,
+  title ={Open Mind Common Sense.},
+  author ={MIT},
+  howpublished = {\url{http://openmind.media.mit.edu/}}
+}
+%------------------------------------------------------------------------
+@inproceedings{ranganathan2007semantic,
+  title={Semantic modeling of places using objects},
+  author={Ranganathan, Ananth and Dellaert, Frank},
+  booktitle={Proceedings of the 2007 Robotics: Science and Systems Conference},
+  volume={3},
+  pages={27--30},
+  year={2007}
+}
+%--------------------------------------------------------------------------
+@inproceedings{Li:2005:BHM:1068508.1069129,
+ author = {Li, Fei-Fei and Perona, Pietro},
+ title = {A Bayesian Hierarchical Model for Learning Natural Scene Categories},
+ booktitle = {Proceedings of the 2005 IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR'05) - Volume 2 - Volume 02},
+ series = {CVPR '05},
+ year = {2005},
+ isbn = {0-7695-2372-2},
+ pages = {524--531},
+ url = {http://dx.doi.org/10.1109/CVPR.2005.16},
+ doi = {10.1109/CVPR.2005.16},
+ acmid = {1069129},
+ publisher = {IEEE Computer Society},
+ address = {Washington, DC, USA},
+} 
+%--------------------------------------------------------------------------
+@INPROCEEDINGS{1641019,
+author={Lazebnik, S. and Schmid, C. and Ponce, J.},
+booktitle={Computer Vision and Pattern Recognition, 2006 IEEE Computer Society Conference on}, title={Beyond Bags of Features: Spatial Pyramid Matching for Recognizing Natural Scene Categories},
+year={2006},
+month={},
+volume={2},
+number={},
+pages={ 2169 - 2178},
+keywords={Histograms;Image databases;Image recognition;Image representation;Image segmentation;Layout;Object recognition;Robustness;Shape;Spatial databases;},
+doi={10.1109/CVPR.2006.68},
+ISSN={1063-6919},}
+%-----------------------------------------------------------------------------
+@article{oliva2006building,
+  title={Building the gist of a scene: The role of global image features in recognition},
+  author={Oliva, Aude and Torralba, Antonio and others},
+  journal={Progress in brain research},
+  volume={155},
+  pages={23},
+  year={2006}
+}
+%-----------------------------------------------------------------------------
+@inproceedings{buschka2002virtual,
+  title={A virtual sensor for room detection},
+  author={Buschka, P{\"a}r and Saffiotti, Alessandro},
+  booktitle={Intelligent Robots and Systems, 2002. IEEE/RSJ International Conference on},
+  volume={1},
+  pages={637--642},
+  year={2002},
+  organization={IEEE}
+}
+%------------------------------------------------------------------------------

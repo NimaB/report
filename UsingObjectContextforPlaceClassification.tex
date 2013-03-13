@@ -3,23 +3,24 @@
 \label{UsingObjectContextforPlaceClassification.ch}
 %------------------------------------------------------------------------
 
-In this Chapter, we discuss the proposed idea of using $object$ $context$ in classification of places.
+In this chapter, we discuss the proposed idea of using object context in classification of places.
 Place classification in here, mainly mean to determine the category of a visited place so that some resulting semantics 
 can be added to and understood by the system.
 
 Adding semantic information to maps, to be used by mobile robots, enhances human-robot interaction.
-It helps robot localization and object detection.
-Obviously, the ability of a robot to understand semantics of space and associate spatial locations with semantic terms 
-such as $kitchen$ or $corridor$, provides a more clear idea of its location than a pure topological or metric position \cite{pronobis2011phd}.   
+It helps in mobile robots localization and object detection.
+The ability of a robot to understand semantics of space and associate spatial locations with semantic terms 
+such as $kitchen$ or $corridor$, provides a more clear idea for the robot and its users of its location than a pure 
+topological or metric position \cite{pronobis2011phd}.   
 
-Regarding Object detection, having semantic information of a place in association with a ground truth about the objects expected
+Regarding object detection, having semantic information of a place in association with a ground truth about the objects expected
 to be present in that place, makes the search for an object faster and more successful.
 It helps robotic systems to communicate with humans and interpret environments built by and for them.
 
 Concepts such as $office$ or $kitchen$ are different categories for a room based on its functionality.
-Other features categorized based on its spatial properties such as its shape, size or general appearance.
+Other categorizations can be  based on its spatial properties such as its shape, size or general appearance.
 
-Figure ~\ref{semanticmapping.figure} shows an overview of a semantic mapping system proposed by Pronobis in \cite{pronobis2011phd}.
+Figure ~\ref{semanticmapping.figure} shows an overview of a semantic mapping system proposed by Pronobis and Jensfelt in \cite{pronobis2011phd}.
 As it is illustrated in this picture, inputs to this system are models of objects, shape, size and appearance in the company of a 
 common-sense knowledge database.
 It is considered as a future work for this thesis that 3D $context$ $models$ replace $object$ $models$ in this system and with some improvements 
@@ -37,7 +38,7 @@ a more robust and complete representation for places would be achieved.
  Place categorization based on vision in its first stages was focused on classifying single 2D images of an indoor or 
  outdoor scene.
  Data achieved from laser range sensors are also popular due to their robustness to environmental variations and faster process time
- .\cite{pronobis2011phd}
+ \cite{pronobis2011phd}.
  Several researchers in computer vision community addressed the problem of place classification, some examples are 
  reviewed here.
  
@@ -58,8 +59,8 @@ a more robust and complete representation for places would be achieved.
  There are approaches that mostly rely on object information for place categorization.
  Usually a more fine grained description of a place based on its functionality needs association of some key objects 
  for each place category.
- As mentioned in Chapter \ref{Introduction.ch}, rooms are usually classified into categories like $Office$ $kitchen$ based on 
- their functionality which is tightly dependent to the objects found within them.
+ As mentioned in Chapter \ref{Introduction.ch}, rooms are usually classified into categories like $Office$ or 
+ $kitchen$ based on their functionality which is tightly dependent to the objects found within them.
  
 In \cite{Vasudevan2007359}, Vasudevan et al. suggest a hierarchical probabilistic representation of space using object
 information. 
@@ -109,8 +110,8 @@ A combination of shelves and books can be discriminative for an office, while sh
 \end{equation}
 
 Dependency of the room category to a combination of object categories is shown in equation \ref{mDepend.eq}. 
-A probabilistic graphical model can be achieved like the one depicted in figure ~\ref{RoomObjectDepend.figure} in which
-singular dependencies are shown by continuous lines and combinational dependency is illustrated by dashed line.
+A model can be achieved like the one depicted in figure ~\ref{RoomObjectDepend.figure} in which singular dependencies are shown by continuous 
+lines and combinational dependency is illustrated by dashed line.
 A normalized weight can be computed based on this analysis for each object category.  
 
  \begin{figure}[t]
@@ -127,9 +128,11 @@ Some of the benefits of employing $context$ $models$ in place classification can
 \begin{itemize}
  \item It provides a simple way to include human annotations from common-sense knowledge bases into place 
  representation.
- \item It is a way of including spatial relations into place representation.
- \item It is a way to make place models more universal.
+ %\item It is a way of including spatial relations into place representation.
  \item It brings in object information while no fine grained object detection is needed.
+ \item It is a way to make place models more universal representing them based on object context information instead
+ of object information which gives a generalization to the model.
+ 
 \end{itemize}
 
 
@@ -172,7 +175,9 @@ estimated.
 In equation \ref{PlaceScore.eq}, $Spc_j$ is the score for place category $j$, $k$ is the number of key object categories.
 The corresponding weight for each object category is shown by $w_k$. 
 Both scores should be normalized to a range between zero and one to be comparable for different place categories. 
-Here we used object category and context category as equivalents. 
+Here we used object category and context category as equivalents.
+It is noticeable that the proposed equations meant to introduce the general relation between elements.
+The exact relations need to be achieved through experiments. 
 
 
 

@@ -20,6 +20,10 @@
 % Packages and macros
 %----------------------------------------------------------------------
 \usepackage{Nima}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+
 %----------------------------------------------------------------------
 
 
@@ -58,7 +62,7 @@
 \mainmatter
 %---------------------------------------
 %\include{Introduction}
-\include{test}
+\include{Introduction}
 \include{ModelingObjectContext}
 \include{3DModelofObjectContext}
 \include{UsingObjectContextforPlaceClassification}

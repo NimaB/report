@@ -3,23 +3,24 @@
 \label{UsingObjectContextforPlaceClassification.ch}
 %------------------------------------------------------------------------
 
-In this Chapter, we discuss the proposed idea of using $object$ $context$ in classification of places.
+In this chapter, we discuss the proposed idea of using object context in classification of places.
 Place classification in here, mainly mean to determine the category of a visited place so that some resulting semantics 
 can be added to and understood by the system.
 
 Adding semantic information to maps, to be used by mobile robots, enhances human-robot interaction.
-It helps robot localization and object detection.
-Obviously, the ability of a robot to understand semantics of space and associate spatial locations with semantic terms 
-such as $kitchen$ or $corridor$, provides a more clear idea of its location than a pure topological or metric position \cite{pronobis2011phd}.   
+It helps in mobile robots localization and object detection.
+The ability of a robot to understand semantics of space and associate spatial locations with semantic terms 
+such as $kitchen$ or $corridor$, provides a more clear idea for the robot and its users of its location than a pure 
+topological or metric position \cite{pronobis2011phd}.   
 
-Regarding Object detection, having semantic information of a place in association with a ground truth about the objects expected
+Regarding object detection, having semantic information of a place in association with a ground truth about the objects expected
 to be present in that place, makes the search for an object faster and more successful.
-In other words, it helps robotic systems to communicate with humans and interpret environments built by and for them.
+It helps robotic systems to communicate with humans and interpret environments built by and for them.
 
 Concepts such as $office$ or $kitchen$ are different categories for a room based on its functionality.
-Other features categorized based on its spatial properties such as its shape, size or general appearance.
+Other categorizations can be  based on its spatial properties such as its shape, size or general appearance.
 
-Figure ~\ref{semanticmapping.figure} shows an overview of a semantic mapping system proposed by Pronobis in \cite{pronobis2011phd}.
+Figure ~\ref{semanticmapping.figure} shows an overview of a semantic mapping system proposed by Pronobis and Jensfelt in \cite{pronobis2011phd}.
 As it is illustrated in this picture, inputs to this system are models of objects, shape, size and appearance in the company of a 
 common-sense knowledge database.
 It is considered as a future work for this thesis that 3D $context$ $models$ replace $object$ $models$ in this system and with some improvements 
@@ -28,7 +29,7 @@ a more robust and complete representation for places would be achieved.
 \begin{figure}[t]
   \centerpsw{semanticmapping}{0.85\columnwidth}
   \caption[Overview of a semantic mapping system]
-  {Overview of a semantic mapping system by Dr. Pronobis in \cite{pronobis2011phd}(best viewed in color).}
+  {Overview of a semantic mapping system by Pronobis in \cite{pronobis2011phd}(best viewed in color).}
   \label{semanticmapping.figure}
 \end{figure}
 
@@ -36,8 +37,8 @@ a more robust and complete representation for places would be achieved.
 \label{OverviewPlaceClassification.sec}
  Place categorization based on vision in its first stages was focused on classifying single 2D images of an indoor or 
  outdoor scene.
- Data achieved from laser range sensors were also popular due to their robustness to environmental variations and faster process time
- .\cite{pronobis2011phd}
+ Data achieved from laser range sensors are also popular due to their robustness to environmental variations and faster process time
+ \cite{pronobis2011phd}.
  Several researchers in computer vision community addressed the problem of place classification, some examples are 
  reviewed here.
  
@@ -48,7 +49,7 @@ a more robust and complete representation for places would be achieved.
   
  Olivia and Torralba proposed a scene representation called gist of the scene in \cite{oliva2006building} which is 
  used by Torralba et al. in \cite{TorralbaContextualPriming} and \cite{TrollbaContexBased} for place categorization.
- They used 2D object context information as mentioned in previous chapters in their work.
+ They used 2D object context information as mentioned in previous Chapters in their work.
  Later Quattoni and Torralba in \cite{quattoni2009recognizing} combined the gist of the scene with local features and 
  reported significant improvement in their results.
  
@@ -58,8 +59,8 @@ a more robust and complete representation for places would be achieved.
  There are approaches that mostly rely on object information for place categorization.
  Usually a more fine grained description of a place based on its functionality needs association of some key objects 
  for each place category.
- As mentioned in chapter \ref{Introduction.ch}, rooms are usually classified into categories like $Office$ $kitchen$ based on 
- their functionality which is tightly dependent to the objects found within them.
+ As mentioned in Chapter \ref{Introduction.ch}, rooms are usually classified into categories like $Office$ or 
+ $kitchen$ based on their functionality which is tightly dependent to the objects found within them.
  
 In \cite{Vasudevan2007359}, Vasudevan et al. suggest a hierarchical probabilistic representation of space using object
 information. 
@@ -78,8 +79,11 @@ Object detection in association of a common-sense knowledge database completes t
  
 \section{Ground Truth}
 \label{GroundTruth.sec}
-As mentioned before, a ground truth or common-sense knowledge database is needed to make the relation between the class of a place and object contexts present in it.
-This knowledge can be achieved by analyzing available common-sense knowledge databases like \bf{Open Mind} \cite{OpenMind}, popular search engines such as Google Image Search, image repositories like Flicker or directly from a human user inputs. 
+As mentioned before, a ground truth is needed to make the relation between the class of a place and object contexts 
+present in it.
+This knowledge can be achieved by analyzing available common-sense knowledge databases like \bf{Open Mind} \cite{OpenMind}, 
+popular search engines such as Google Image Search, image repositories like Flicker or directly from a human user 
+inputs. 
 
 Viswanathan et al. in \cite{P.Viswanathan}, have performed an automated learning of object-place relations on an on-line annotated database such as $Label$ $me$. 
 Then object detectors are trained on some of the most frequently occurring objects.
@@ -106,8 +110,8 @@ A combination of shelves and books can be discriminative for an office, while sh
 \end{equation}
 
 Dependency of the room category to a combination of object categories is shown in equation \ref{mDepend.eq}. 
-A probabilistic graphical model can be achieved like the one depicted in figure ~\ref{RoomObjectDepend.figure} in which
-singular dependencies are shown by continuous lines and combinational dependency is illustrated by dashed line.
+A model can be achieved like the one depicted in figure ~\ref{RoomObjectDepend.figure} in which singular dependencies are shown by continuous 
+lines and combinational dependency is illustrated by dashed line.
 A normalized weight can be computed based on this analysis for each object category.  
 
  \begin{figure}[t]
@@ -122,10 +126,13 @@ A normalized weight can be computed based on this analysis for each object categ
 \label{BenefitsofObjectContextforPlaceClassification.sec}
 Some of the benefits of employing $context$ $models$ in place classification can be briefly mentioned as follows: 
 \begin{itemize}
- \item It provides a simple way to include human annotations into place representation.
- \item It is a way of including spatial relations into place representation.
- \item It is a way to make place models more universal.
+ \item It provides a simple way to include human annotations from common-sense knowledge bases into place 
+ representation.
+ %\item It is a way of including spatial relations into place representation.
  \item It brings in object information while no fine grained object detection is needed.
+ \item It is a way to make place models more universal representing them based on object context information instead
+ of object information which gives a generalization to the model.
+ 
 \end{itemize}
 
 
@@ -168,7 +175,9 @@ estimated.
 In equation \ref{PlaceScore.eq}, $Spc_j$ is the score for place category $j$, $k$ is the number of key object categories.
 The corresponding weight for each object category is shown by $w_k$. 
 Both scores should be normalized to a range between zero and one to be comparable for different place categories. 
-Here we used object category and context category as equivalents. 
+Here we used object category and context category as equivalents.
+It is noticeable that the introduced equations meant to introduce the relation between elements in general.
+The exact relations need to be achieved through experiments 
 
 
 

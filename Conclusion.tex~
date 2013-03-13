@@ -4,10 +4,10 @@
 %------------------------------------------------------------------------
 In this thesis, we proposed an idea and a method to build 3D model of object context using geometrical features extracted
 from point-clouds of a scene or room.
-Point-clouds are produced using data from kinect sensor with its limitations.
+Point-clouds are produced using data from kinect sensor.
 A set of point-clouds is gathered from different place categories including different objects to be used for experiments.
 
-A metric for evaluation of the results is proposed in way that it can assess the results as they are expected to be.
+A metric for evaluation of the results is proposed in a way that it can assess the results as they are expected to be.
 The context prediction of the system are expected to be a $superset$ of positive samples in train set.
 In spite of the few number of point-clouds and instances of the objects used in experiments the results are quite acceptable. 
 

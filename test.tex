@@ -6,7 +6,7 @@ A stereotypical image of a robot is a humanoid in a servant costume which can do
 %This is not too far from scientific projects which are being run in research labs. 
 Assuming such goal, human behavior becomes a natural inspiration for the algorithms governing the behavior of a robot in the 
 assigned tasks and situations.
-Imagining a simple but common task of find-and-fetch, in witch a mobile robot is asked to find an object and bring it 
+Imagining a simple but common task of find-and-fetch, in which a mobile robot is asked to find an object and bring it 
 to the user. 
 The first solution that could be thought of, is to learn how exactly a human would perform the task. 
 Then, how the procedure can be translated to an algorithm executable on a robotic system.
@@ -20,7 +20,7 @@ underlying processes.
 In case of the find-and-fetch task, if it is assigned to a human agent, he is likely to imagine what does the target 
 object look like, where and in what situation it is often found.
 If the object is known, a natural behavior is to visit the most probable location for the object first.
-Only in the worst case scenario and without the knowledge of the object, one would perform a thorough search of the 
+Only in the worst case scenario and without the knowledge of the object, one would perform a through search of the 
 whole scene.
 In other words, the strategy depends on the amount of information about the target object. 
 %Returning to our Find-and-fetch task; When such a task is given to a human, The first step for him 
@@ -66,7 +66,7 @@ In this work, we propose a method to build models of 3D object context, which no
 object detector, but also as a useful knowledge in building 3D representation for places. 
 Benefiting from this model, the area needed to be searched in an object detection task can be reduced to parts of the scene with high 
 probability of being the context for the object of interest. 
-It can also have a positive effect on number of true positive in prediction results. 
+It can also have a positive effect on number of true positives in prediction results. 
 Combining the information encoded in this model with other features and structural information of different place categories can 
 result in a representation for places.
  
@@ -77,11 +77,11 @@ result in a representation for places.
  Most important points about this work ca be briefly mentioned as follows:
  
  \begin{itemize}
-  \item Emphasizing on the role of context in object detection and it's related applications.
-  \item The features and methodology suggested to model the Object Context.
+  \item Emphasizing on the role of context in object detection and its related applications.
+  \item The feature descriptor and methodology suggested to extract features and model the Object Context.
   \item The input data used in this work are full point-clouds of places rather than single frames with depth information or 
   2D images.
-  \item Suggesting the application of Context model in place classification.
+  \item Suggesting the application of Context model in place classification and proposing a method to do it.
   
  \end{itemize}
 
@@ -94,33 +94,49 @@ Applications in place classification would be discussed later in chapter \ref{Us
      or place classification are briefly reviewed. 
      Moreover, other works which contribute 3D features and descriptors for similar purposes are mentioned.
      
-\subsection*{Object Context}
-     In \cite{TrollbaContexBased} Torralba et al. present a low dimensional global image representation
-     capturing useful information for recognition of places and show how contextual information can provide priors for object
-     recognition. 
-     As mentioned before, this work considers 2D images only. 
+%\subsection*{Object Context}
+The usefulness of contextual information for object detection and recognition is discussed and
+considered in \cite{TrollbaContexBased}, \cite{TorralbaContextualPriming}, \cite{PerkoLeonardisContextDriven}
+and \cite{aydemir2012_3Dcontext}.
+Torralba et al. in \cite{TrollbaContexBased}, present a low dimensional global image 
+     representation capturing useful information for recognition of places and show how contextual 
+     information can provide priors for object recognition.
+     So in this work a place category is considered as a context for objects.
+     They suggested that knowing the category of a place helps finding objects that are relevant to
+     that place category.
+     We have a more fine grained definition for context of the object which is limited to a 
+     vicinity around the object.
+     In this work we are suggesting an opposite direction which is using local object context information
+     can help us in recognizing the category of a place.
      
-     In \cite{TorralbaContextualPriming} Torralba uses the relationship between object and it's context properties from 
-     2D images to build model that helps the focus of an object detector's attention and also for scale selection. 
+     Torralba in In \cite{TorralbaContextualPriming}, Perko and Leonardis in In \cite{PerkoLeonardisContextDriven}
+     and Aydemir et al. in  \cite{aydemir2012_3Dcontext} train models for object context to focus
+     the attention of object detectors to reduced search regions which match the learned models.
+     In these works the definition of object context become closer to what we consider.
+     
+2D features extracted from images are the information used in \cite{TrollbaContexBased}, 
+\cite{TorralbaContextualPriming} and \cite{PerkoLeonardisContextDriven} while in \cite{aydemir2012_3Dcontext}
+3D information extracted from RGB-D frames builds models of 3D object context.
+The later also analyzed the improvement in the performance of available object detectors using context information.
       
-     In \cite{PerkoLeonardisContextDriven} Perko and Leonardis extract and learn contextual information for objects from examples.
-     Then they use this learned context to calculate a focus of attention, that represents a prior for object detection. Their work is 
-     also used 2D features extracted from images. 
- 
-      Aydemir et al. in \cite{aydemir2012_3Dcontext} learn 3D context of objects to predict object locations in 
-      real world scenes. 
-      They used separate RGB and depth frames and used histograms of surface normals as a 3D geometrical feature
-      to model object context.
+      we use 3D information and features from full pointclouds of a place not just single frames 
+      which helps capturing spacial relations in the whole captured space.
+      It is useful especially in place representation.
       
-    In \cite{5651280} Rusu et al. proposed Viewpoint Feature Histogram that encodes 3D geometry and pose. They suggested that this descriptor
-    can be used for object recognition and pose estimation with high reliability.
-    In this work we employ a descriptor, which contains their descriptor, for modeling context of objects.
+    In \cite{5651280} Rusu et al. proposed Viewpoint Feature Histogram that encodes 3D geometry and pose. 
+    They suggested that this descriptor can be used for object recognition and pose estimation with high reliability.
+    In this work we employ a feature descriptor, which contains their descriptor, for modeling context of objects.
+    By the feature extraction method we are proposing in this work, their descriptor is being used in a specific and 
+    novel way.
+    In contrast of its suggested usage to be extracted as a global descriptor for a pointcloud, based on a fixed view point,
+    we are extracting it for several small subsets of a pointcloud and from several distinct viewpoints.
+    It is discuss in detail in Section \ref{Implementation.sec}.
      
 \subsection*{Place classification}
 
     In \cite{Vasudevan2008522}, Vasudevan and Siegwart proposed a representation for space based on objects. 
-    The authors discuss several algorithms, some of which only uses object category presence and some are more sophisticated using both 
-    objects and their relationships and also spacial structure of places.
+    The authors discuss several algorithms, some of which only uses object category presence and some are more 
+    sophisticated using both objects and their relationships and also spacial structure of places.
     
     More researches are discussed later in Chapter \ref{UsingObjectContextforPlaceClassification.ch} which is 
     specifically devoted to this particular application.
