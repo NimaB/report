@@ -16,6 +16,189 @@ This work is unique regarding the suggestion of using 3D context model of object
 point-clouds of a place. 
 These full point-clouds can be extended to a 3D map of an environment.
 
+\section{3D Object Context for place Classification}
+\label{3D Object Context for place Classification.sec}
+
+In this section, we discuss the proposed idea of using object context in classification of places.
+Place classification in here, mainly mean to determine the category of a visited place so that some resulting semantics 
+can be added to and understood by the system.
+
+Adding semantic information to maps, to be used by mobile robots, enhances human-robot interaction.
+It helps in mobile robots localization and object detection.
+The ability of a robot to understand semantics of space and associate spatial locations with semantic terms 
+such as $kitchen$ or $corridor$, provides a more clear idea for the robot and its users of its location than a pure 
+topological or metric position \cite{pronobis2011phd}.   
+
+Regarding object detection, having semantic information of a place in association with a ground truth about the objects expected
+to be present in that place, makes the search for an object faster and more successful.
+It helps robotic systems to communicate with humans and interpret environments built by and for them.
+
+Concepts such as $office$ or $kitchen$ are different categories for a room based on its functionality.
+Other categorizations can be  based on its spatial properties such as its shape, size or general appearance.
+
+Figure ~\ref{semanticmapping.figure} shows an overview of a semantic mapping system proposed by Pronobis and Jensfelt in \cite{pronobis2011phd}.
+As it is illustrated in this picture, inputs to this system are models of objects, shape, size and appearance in the company of a 
+common-sense knowledge database.
+It is considered as a future work for this thesis that 3D $context$ $models$ replace $object$ $models$ in this system and with some improvements 
+a more robust and complete representation for places would be achieved.
+
+\begin{figure}[t]
+  \centerpsw{semanticmapping}{0.85\columnwidth}
+  \caption[Overview of a semantic mapping system]
+  {Overview of a semantic mapping system by Pronobis in \cite{pronobis2011phd}(best viewed in color).}
+  \label{semanticmapping.figure}
+\end{figure}
+
+\subsection{Brief overview of approaches to place classification}
+\label{OverviewPlaceClassification.sec}
+ Place categorization based on vision in its first stages was focused on classifying single 2D images of an indoor or 
+ outdoor scene.
+ Data achieved from laser range sensors are also popular due to their robustness to environmental variations and faster process time
+ \cite{pronobis2011phd}.
+ Several researchers in computer vision community addressed the problem of place classification, some examples are 
+ reviewed here.
+ 
+ Li and Perona in \cite{Li:2005:BHM:1068508.1069129} represented images of scenes as a collection of local regions 
+ called codewords achieved from unsupervised learning. 
+ Similarly, Lazebnik et al. in \cite{1641019} extended a bag-of-words approach in a computationally efficient way
+ by introducing a spacial pyramid which contains approximate global geometric correspondences between local features.
+  
+ Olivia and Torralba proposed a scene representation called gist of the scene in \cite{oliva2006building} which is 
+ used by Torralba et al. in \cite{TorralbaContextualPriming} and \cite{TrollbaContexBased} for place categorization.
+ They used 2D object context information as mentioned in previous Chapters in their work.
+ Later Quattoni and Torralba in \cite{quattoni2009recognizing} combined the gist of the scene with local features and 
+ reported significant improvement in their results.
+ 
+ Also in robotics, researchers worked through capturing some semantics mostly using laser range data.
+ Buschka and Saffiotti classified different parts of grid maps into two categories: rooms and corridors in \cite{buschka2002virtual}. 
+ 
+ There are approaches that mostly rely on object information for place categorization.
+ Usually a more fine grained description of a place based on its functionality needs association of some key objects 
+ for each place category.
+ As mentioned in Chapter \ref{Introduction.ch}, rooms are usually classified into categories like $Office$ or 
+ $kitchen$ based on their functionality which is tightly dependent to the objects found within them.
+ 
+In \cite{Vasudevan2007359}, Vasudevan et al. suggest a hierarchical probabilistic representation of space using object
+information. 
+They use SIFT features to detect and recognize objects then create a local probabilistic object graph for the place. 
+They also detect doorways to separate rooms from each other in their map. 
+Using object graphs for each visited place they make a global topological representation of an environment.
+
+\cite{ranganathan2007semantic} and \cite{P.Viswanathan} also used object based approaches using models trained in 
+advance in a supervised manner. 
+In \cite{ranganathan2007semantic}, Ranganathan and Dellaert train object models using visual features capturing their 
+shape and appearance from roughly segmented and labeled images. 
+They also added 3D locations of the objects using stereo range data.
+ 
+Pronobis in \cite{pronobis2011phd} integrated multiple visual cues with geometric information from laser range data. 
+Object detection in association of a common-sense knowledge database completes the information needed to determine the category of places in his semantic mapping system.
+ 
+\subsection{Ground Truth}
+\label{GroundTruth.sec}
+As mentioned before, a ground truth is needed to make the relation between the class of a place and object contexts 
+present in it.
+This knowledge can be achieved by analyzing available common-sense knowledge databases like \bf{Open Mind} \cite{OpenMind}, 
+popular search engines such as Google Image Search, image repositories like Flicker or directly from a human user 
+inputs. 
+
+Viswanathan et al. in \cite{P.Viswanathan}, have performed an automated learning of object-place relations on an on-line annotated database such as $Label$ $me$. 
+Then object detectors are trained on some of the most frequently occurring objects.
+In our case instead of objects we train their context detectors.
+
+Based on the dependencies between place category and its objects also between different object categories we can make 
+probabilistic models that represent these relations and dependencies.
+Some objects are more discriminative for a place category which should have a more significant role in deciding the 
+category of the place.
+For instance, a water tap in the kitchen or its sink as its context are quite discriminative for this place category.
+
+\begin{equation}
+ \label{sDepend.eq}
+ w_i = p(R_c \mid O_i) 
+\end{equation}
+
+Equation \ref{sDepend.eq} shows the dependency between a room category ($R_c$) and each object category ($O_i$).
+Sometime, the dependency lies on a combination of objects.
+A combination of shelves and books can be discriminative for an office, while shelves and dishes are good for kitchen.
+
+\begin{equation}
+ \label{mDepend.eq}
+ w_{i^{'}} = p(R_c \mid O_j,O_k)
+\end{equation}
+
+Dependency of the room category to a combination of object categories is shown in equation \ref{mDepend.eq}. 
+A model can be achieved like the one depicted in figure ~\ref{RoomObjectDepend.figure} in which singular dependencies are shown by continuous 
+lines and combinational dependency is illustrated by dashed line.
+A normalized weight can be computed based on this analysis for each object category.  
+
+ \begin{figure}[t]
+  \centerpsw{RoomObjectDepend}{0.65\columnwidth}
+  \caption[Probabilistic graphical model of place-object.]
+  {This figure shows dependencies between a room category and key object classes, dashed lines shows dependency to a combination of object categories.}
+  \label{RoomObjectDepend.figure}
+\end{figure}
+
+ 
+\subsection{Benefits of Object Context for Place Classification}
+\label{BenefitsofObjectContextforPlaceClassification.sec}
+Some of the benefits of employing $context$ $models$ in place classification can be briefly mentioned as follows: 
+\begin{itemize}
+ \item It provides a simple way to include human annotations from common-sense knowledge bases into place 
+ representation.
+ %\item It is a way of including spatial relations into place representation.
+ \item It brings in object information while no fine grained object detection is needed.
+ \item It is a way to make place models more universal representing them based on object context information instead
+ of object information which gives a generalization to the model.
+ 
+\end{itemize}
+
+
+\subsection{Place classification}
+\label{Place classification.sec}
+A method is proposed here to compute a score for each place category based on the amount of objects possible to be
+found in a place. 
+In each place category based on its ground truth learned from a lot of examples we compute a weighted sum of the 
+scores of each key object class.
+The score for place categories should represent the followings:
+
+\begin{itemize}
+ \item Probability of presence of an object class in a place.
+ \item Weight or ratio for this presence.
+ \item Based on a ground truth a probability of being an specific place category.
+\end{itemize}
+
+Applying context models on the point-cloud of a room, we get a subset of points with highest probability of being 
+the context. 
+In other words, we can estimate the amount of points belonging to a context category in that point-cloud.
+An average probability for context points belonging to each context category can be computed and assigned to that category.
+Using the ratio of points in each category and the value of the average probability a score is estimated for each context
+category (Equation \ref{contextScore.eq}).
+
+\begin{equation}
+ \label{contextScore.eq}
+Sc_i = Avg(p(c_i)) * \frac{points \in c_i}{points} 
+\end{equation}
+
+$Sc_i$ is the score for object category $i$, $Avg(x)$ computes average and the last element of the equation shows the ratio
+of points in context category $i$ with respect to all points in the point-cloud. 
+Employing weights resulted from ground truth analysis (\ref{GroundTruth.sec}) a score for each place category can be 
+estimated.
+
+\begin{equation}
+ \label{PlaceScore.eq}
+ Spc_j = w_1 * Sc_1 + w_2 * Sc_2 \ldots + w_k * Sc_k
+\end{equation}
+
+In equation \ref{PlaceScore.eq}, $Spc_j$ is the score for place category $j$, $k$ is the number of key object categories.
+The corresponding weight for each object category is shown by $w_k$. 
+Both scores should be normalized to a range between zero and one to be comparable for different place categories. 
+Here we used object category and context category as equivalents.
+It is noticeable that the proposed equations meant to introduce the general relation between elements.
+The exact relations need to be achieved through experiments. 
+
+
+
+
+
 \section{Future work}
 
 There are some suggestions for improvements and some potential future works which are mentioned here.

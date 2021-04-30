@@ -1,9 +1,27 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{aydemir2012kinect}
 A.~Aydemir, D.~Henell, P.~Jensfelt, and R.~Shilkrot.
 \newblock Kinect@ home: Crowdsourcing a large 3d dataset of real environments.
 \newblock In {\em 2012 AAAI Spring Symposium Series}, 2012.
+
+\bibitem{aydemir2012_3Dcontext}
+A.~Aydemir and P.~Jensfelt.
+\newblock Exploiting and modeling local 3d structure for predicting object
+  locations.
+\newblock In {\em 2012 IEEE/RSJ International Conference on Intelligent Robots
+  and Systems (IROS)}. IEEE, 2012.
+
+\bibitem{AnnotationGithub}
+Nima Behzad.
+\newblock Point cloud annotation tool.
+\newblock \url{git@github.com:NimaB/PointCloud--Annotation.git}, 2012.
+
+\bibitem{buschka2002virtual}
+P{\"a}r Buschka and Alessandro Saffiotti.
+\newblock A virtual sensor for room detection.
+\newblock In {\em Intelligent Robots and Systems, 2002. IEEE/RSJ International
+  Conference on}, volume~1, pages 637--642. IEEE, 2002.
 
 \bibitem{LIBSVM}
 Chih-Chung Chang and Chih-Jen Lin.
@@ -19,10 +37,59 @@ Chih-Chung Chang and Chih-Jen Lin.
 \newblock In {\em "Proc. of the RGB-D Workshop on 3D Perception in Robotics at
   the European Robotics Forum"}, "Vasteras, Sweden", "April" "2011".
 
-\bibitem{eigenweb}
-Ga\"{e}l Guennebaud, Beno\^{i}t Jacob, et~al.
-\newblock Eigen v3.
-\newblock http://eigen.tuxfamily.org, 2010.
+\bibitem{1641019}
+S.~Lazebnik, C.~Schmid, and J.~Ponce.
+\newblock Beyond bags of features: Spatial pyramid matching for recognizing
+  natural scene categories.
+\newblock In {\em Computer Vision and Pattern Recognition, 2006 IEEE Computer
+  Society Conference on}, volume~2, pages 2169 -- 2178, 2006.
+
+\bibitem{Li:2005:BHM:1068508.1069129}
+Fei-Fei Li and Pietro Perona.
+\newblock A bayesian hierarchical model for learning natural scene categories.
+\newblock In {\em Proceedings of the 2005 IEEE Computer Society Conference on
+  Computer Vision and Pattern Recognition (CVPR'05) - Volume 2 - Volume 02},
+  CVPR '05, pages 524--531, Washington, DC, USA, 2005. IEEE Computer Society.
+
+\bibitem{li2010holistic}
+Fuxin Li, Jo{\~a}o Carreira, and Cristian Sminchisescu.
+\newblock Object recognition as ranking holistic figure-ground hypotheses.
+\newblock In {\em CVPR}, 2010.
+
+\bibitem{OpenMind}
+MIT.
+\newblock Open mind common sense.
+\newblock \url{http://openmind.media.mit.edu/}.
+
+\bibitem{oliva2006building}
+Aude Oliva, Antonio Torralba, et~al.
+\newblock Building the gist of a scene: The role of global image features in
+  recognition.
+\newblock {\em Progress in brain research}, 155:23, 2006.
+
+\bibitem{PerkoLeonardisContextDriven}
+Roland Perko and Aleš Leonardis.
+\newblock Context driven focus of attention for object detection.
+\newblock In Lucas Paletta and Erich Rome, editors, {\em Attention in Cognitive
+  Systems. Theories and Systems from an Interdisciplinary Viewpoint}, volume
+  4840 of {\em Lecture Notes in Computer Science}, pages 216--233. Springer
+  Berlin Heidelberg, 2007.
+
+\bibitem{pronobis2011phd}
+Andrzej Pronobis.
+\newblock {\em Semantic Mapping with Mobile Robots}.
+\newblock PhD thesis, KTH Royal Institute of Technology, Stockholm, Sweden, jun
+  2011.
+
+\bibitem{quattoni2009recognizing}
+Ariadna Quattoni and Antonio Torralba.
+\newblock Recognizing indoor scenes, 2009.
+
+\bibitem{ranganathan2007semantic}
+Ananth Ranganathan and Frank Dellaert.
+\newblock Semantic modeling of places using objects.
+\newblock In {\em Proceedings of the 2007 Robotics: Science and Systems
+  Conference}, volume~3, pages 27--30, 2007.
 
 \bibitem{VFH_Definition}
 "Radu~Bogdan Rusu, Gary Bradski, Romain Thibaux, and John Hsu".
@@ -39,5 +106,40 @@ R.B. Rusu, G.~Bradski, R.~Thibaux, and J.~Hsu.
 \newblock Fast 3d recognition and pose using the viewpoint feature histogram.
 \newblock In {\em Intelligent Robots and Systems (IROS), 2010 IEEE/RSJ
   International Conference on}, pages 2155 --2162, oct. 2010.
+
+\bibitem{southey2006object}
+T.~Southey and J.J. Little.
+\newblock Object discovery through motion, appearance and shape.
+\newblock In {\em AAAI Workshop on Cognitive Robotics, Technical Report
+  WS-06-03. AAAI Press}, 2006.
+
+\bibitem{TrollbaContexBased}
+A.~Torralba, K.P. Murphy, W.T. Freeman, and M.A. Rubin.
+\newblock Context-based vision system for place and object recognition.
+\newblock In {\em Computer Vision, 2003. Proceedings. Ninth IEEE International
+  Conference on}, pages 273 --280 vol.1, oct. 2003.
+
+\bibitem{eyeMovement}
+A.~Torralba, A.~Oliva, M.~S. Castelhano, and J.~M. Henderson.
+\newblock Contextual guidance of eye movements and attention in real-world
+  scenes: the role of global features in object search.
+\newblock {\em Psychological Review}, 113(4):766--786, October 2006.
+
+\bibitem{TorralbaContextualPriming}
+Antonio Torralba.
+\newblock Contextual priming for object detection.
+\newblock {\em International Journal of Computer Vision}, 53:169--191, 2003.
+
+\bibitem{Vasudevan2007359}
+Shrihari Vasudevan, Stefan Gächter, Viet Nguyen, and Roland Siegwart.
+\newblock Cognitive maps for mobile robots an object based approach.
+\newblock {\em Robotics and Autonomous Systems}, 55(5):359--371, 2007.
+\newblock <ce:title>From Sensors to Human Spatial Concepts</ce:title>.
+
+\bibitem{P.Viswanathan}
+P.~Viswanathan, T.~Southey, J.J. Little, and A.~Mackworth.
+\newblock Automated place classification using object detection.
+\newblock In {\em Computer and Robot Vision (CRV), 2010 Canadian Conference
+  on}, pages 324 --330, 31 2010-june 2 2010.
 
 \end{thebibliography}

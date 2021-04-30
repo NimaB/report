@@ -32,15 +32,56 @@
 % 
 % More details would be presented in section ~\ref{Implementation.sec}
 
+In this chapter, we define our proposed methoed and the the fueatures used to model the Object Contexts. Also details about the implementation, obtaining train and test datasets, Data anotation and expected results. But first lets take a look at some of the chanllenges we had.
+
+% Moved from Chapter 2 on April 21, 2021
+\section{Challenges}
+\label{Challenges.sec}
+
+There are challenges regarding modeling the object context that follows:
+
+\begin{itemize}
+
+ \item Train set quality: There could be situations and scenes which are completely different from
+	what have been considered in train set to build the context model. The closer to an all encompassing dataset we can get, the more accurate model we can have. This would be a chanllenge in most projects that involve learning.
+	
+ \item Annotation of objects in Training data: An easy and reliable tool was needed to annotate 3D objects in pointclouds.
+	
+ \item Pointcloud quality: The quality of pointclouds is a critical issue. The amount of smoothness in the pointcloud and missing points have a 
+ significant effect on the extracted features, which are used to describe surfaces, and as a result, on the context model. 
+ When pointclouds are being captured, if due to the viewpoints of the sensor some parts of a surface are occluded, 
+ the resulting pointcloud might lack important points.
+ The geometry that is extracted from such surfaces is not accurate and in some cases are wrong.
+ 
+ \item Significant difference in the number of positive samples (feature vectors extracted from a region with annotated object presence) against negative ones, in feature vectors extracted form training pointclouds.
+ 
+\end{itemize}
+
+
+\section{2D vs 3D context, benefits of 3D}
+Popularity of devices such as Microsoft Kinect, has made 3D data widely accessible. 
+Therefore, many researchers and academics have shown great desire to use 3D information in their researches, 
+which gives a lot more information about our surrounding compared to 2D data. 
+Using 3D data has made it simple to capture geometrical information in addition to visual properties. 
+From the output of this type of sensors, we can easily and directly have access to depth information and 3D 
+coordinates of any points that are perceived.
+
+Geometrical features, which are obtained from 3D information, enhances performance of systems significantly in tasks like feature 
+based object detection compared to relying only on visual information. 
+Particularly, in the problem we are dealing with, to build a model for object context, depending on features which only encode 
+changes in intensity and color is not enough. The geometry of surfaces needed to be analyzed and 3D information facilitates and improves this analysis.
+
+
 \section{Methodology}
 \label{Implementation.sec}
 
 In this section, the procedure of building the context model and how it is applied, is described in detail. 
 The input in this procedure is the pointcloud of a scene and the output is a list of probability values assigned to all regions in
-the scene. 
-The probability value shows if the region is likely to be a context. 
+the scene which corresponds to their likelihood of being the context of a particular object class. 
+
+
 The input cloud is first preprocessed and then get annotated with instances of the object class whose context model is being built. 
-Feature extraction would be run on this annotated pointcloud and result in the training samples. 
+Feature extraction would run on this annotated pointcloud and outputs the training samples. 
 Train samples would be combined from several different pointclouds for the same object class to make the train set. 
 Then the train set is given to SVM classifier to make the context model. A block diagram in figure ~\ref{SystemOverview.figure} shows 
 the system overview.
@@ -56,45 +97,59 @@ In the following subsection, we introduce the features used in this work and des
 will come next.
 
 % Features used
-We used PCL ~\cite{Rusu_ICRA2011_PCL} for pointcloud processing. 
+We used PCL ~\cite{Rusu_ICRA2011_PCL} for pointcloud processing and Microsoft Kinect with OpenNi driver to capture these pointclouds.
 %In this data type 3D coordinates and color information of a point is saved in a record and then an array of these records forms 
 %the pointcloud.
-We used Microsoft Kinect with OpenNi driver to capture these pointclouds. 
 
-%TODO: define terms used in the report, like blob
+\subsection{Defining some used terms}
+
+Here are some terms that are used through the rest of the text:\\
+$Point$ $of$ $Interest$: A point from a pointcloud for or around which an analysis is being done.\\
+$Blob$: A subset of the pointcloud within a radius $r$ around a point of interest.\\
+$Query$ $blob$ : The blub from which we are extracting the features.
+
+
+
 \subsection{Object context descriptor}
 \label{OCD.ssec}
+ 
+The feature descriptor we proposed in this work, consists of the following elements:
 
-The feature descriptor we proposed in this work, consists of 2 parts which are discussed below.
-
-The first part includes two fields :
-a field that captures a rough estimation of query surface orientation with respect to the vector of gravity.
-This feature is computed by estimating the angle between average normal of the surface and the gravity vector.
-We consider a unit vector along the z axis in the world coordinate system as the gravity vector.
-It is noticeable that the position and orientation of the camera with respect to this coordinate system is known and used as
+local surface orientation:
+This element captures a rough estimation of query surface orientation with respect to the vector of gravity.This feature is computed by estimating the angle between average normal of the surface and the gravity vector. We consider a unit vector along the z axis in the world coordinate system as the gravity vector. It is noticeable that the position and orientation of the camera with respect to this coordinate system is known and used as
 the ground truth.
 
-Second field is the average height of the query surface from which the features are extracted with respect to the 
-floor.
-The floor is assumed to have the lowest height or vertical position in the pointcloud.
+
+Local surface height:
+This element is the average height of the query surface from which the features are extracted with respect to the floor. The floor is assumed to have the lowest height or vertical position in the pointcloud.
  
-And the second part of the feature vector is a histogram which captures the geometry of the blob with respect to a specific view point.
-This histogram is called VFH (~\cite{5651280}).
+
+Viewpoint Feature Histogram:
+This element of the feature vector is a histogram that encodes the geometry of the blob with respect to a specific view point. We found this descriptior very useful for encoding geometry of surfaces in pointclouds, with respect to specific viewpoints. The innovative way we took advantage of this powerful descriptor helped us to encode the geomentry of surfaces from several different points of view to make our context model independent from the viewpoint. As it was mentioned in \ref{RelatedWork.sec}, being dependant to the viewpoint was a challenge in \cite{aydemir2012_3Dcontext}.
+This descriptor is called VFH (~\cite{5651280}) which is explained more in the following subsection. \footnote{The images and definitions are taken from Point Cloud's official website.}
 
 \subsubsection*{The Viewpoint Feature Histogram (VFH)}
 \label{VFH.ssec}
  
+
 VFH consists of two components (~\cite{VFH_Definition} and ~\cite{5651280}):
+
 
 \begin{itemize}
  \item A histogram for viewpoints(128 bins)
- \item Extended Fast Point feature histogram(FPFH:4*45 bins)
+ \item A histogram that encodes local geometry(180 bins)
 \end{itemize}
 
 The viewpoint component is computed as a histogram of the angles that direction of the viewpoint  makes with each surface
-normals (Figure \ref{VFH_ViewPoint_component.figure}). 
-It is important to notice that, this angle is between the central direction of the viewpoint and the normal, not the view angle of
-the normal which would have made it not scale invariant. 
+normals (Figure \ref{VFH_ViewPoint_component.figure}). So for a query blob $S_q$ if we call the view point as $V_p$, for all points of the blub $p_i$ and the surface normal at that point $n_i$ we have $\alpha$ as the angle between $V$ and $n_i$ where $V = V_p - p_i$.
+
+% \begin{equation}
+%  \label{VFH_viewpoint.eq}
+%     \alpha = angle between (V_p -p_i) , n_i 
+% \end{equation}
+
+It is important to notice that, these angles are between the central direction of the viewpoint and the normal, not the view angle of
+each normal. This is why these features are scale invariant.  
 
 \begin{figure}[t]
   \centerpsw{ViewPoint_component}{0.8\columnwidth}
@@ -103,10 +158,29 @@ the normal which would have made it not scale invariant.
   \label{VFH_ViewPoint_component.figure}
 \end{figure}
 
-The second component measures the relative pan, tilt and yaw angles that are measured between direction of 
-the viewpoint at the central point and each of the normals on the surface. 
-So it consists of accumulated FPFH values for points in the query pointcloud.
-That is reason why it is referred here \ref{VFH_plot.figure} as extended FPFH.
+The second component collects the relative pan, tilt and yaw angles between direction of 
+the surface normal at the centeroid of a query blob and the surface normals at other points in the blob.
+So for each query blob the mean curvature around its central point is encoded, using a multidimensional histogram of values.If $C$ is the center of the query blub and $p_i$ is one of $k-nearest$ $neighbours$ of the centeroid and $n_i$ is the surface normal at $p_i$, we have 3 angles and a distance to be captured in this histogram. $\alpha,\theta, \phi$ and $d$, where the angles are pan, tilt and yaw between each pair of normals and $d$ is the distance between $p_i$ and $C$.  
+
+
+\begin{equation}
+ \label{VFH_geometry.eq}
+    u = n_C
+\end{equation}
+
+\begin{equation}
+ V = (p_i -C) \times u
+\end{equation}
+
+\begin{equation}
+ W = u \times V
+\end{equation}
+
+    
+Figure  ~\ref{FPFH.figure} Shows the encoded elements and their relations.
+
+% So it consists of accumulated FPFH values for points in the query pointcloud.
+%That is the reason why it is referred here \ref{VFH_plot.figure} as extended FPFH.
 
 %FPFH or Fast Point Feature Histogram itself can be considered as a revised version of PFH. FPFH reduces the complexity 
 %of PFH algorithm from $ O(n k^{2}) $ to $ O(n k) $ where $n$ is the number of points in the query pointcloud and $k$ is 
@@ -118,9 +192,8 @@ That is reason why it is referred here \ref{VFH_plot.figure} as extended FPFH.
 %PFH captures 3D geometry of the surfaces around a query point and it is invariant to the 6D pose of the query blob's 
 %surface. 
 VFH is robust to different sampling densities or noise levels in the neighborhood of the query point. 
-The descriptor is computed by estimating a histogram with concatenated 45 bins for four different elements.
+The descriptor is computed by estimating a histogram with concatenated 45 bins for the four different elements, mention above.
 %measured for every possible pairs of points in the query point's neighborhood ($ O(n k^{2}) $). 
-These elements consist of three angles and a distance. 
 %In FPFH \cite{FPFH_Definition}, instead of encoding this information for all pairs of points in a neighborhood, It will only 
 %take pairs between the query point and its neighbors ($ O(n k) $). 
 %At this stage it is referred to as simplified PFH or SPFH. 
@@ -130,35 +203,30 @@ These elements consist of three angles and a distance.
 %  \label{FPFH.eq}
 %  FPFH(P_{q}) = SPFH(P_{q}) + \frac{1}{k} \sum_{i=1}^k {\frac{1}{\omega_k}} \cdot SPFH(k)
 % \end{equation}
-Figure  ~\ref{FPFH.figure} shows the encoded elements and their relation in FPFH.
+
 
 \begin{figure}[t]
   \centerpsw{fpfh_component}{0.65\columnwidth}
-  \caption[FPFH elements.]
-  {Three angles and a distance encoded in FPFH and the points considered.\cite{VFH_Definition}}
+  \caption[Local geomentry elements of VFH.]
+  {Three angles and a distance encoded in the descriptor.\cite{VFH_Definition}}
   \label{FPFH.figure}
 \end{figure}
 
-In VFH the resulting FPFH of points in the pointcloud are integrated to produce one of the two 
-components(extended FPFH).
 The histogram in this component has 180 bins (4*45 bin).
-By adding the view point component (128 bin), it produces a 308 bin histogram. 
-Unlike FPFH, as a result of adding the viewpoint component VFH is dependent to viewpoint which is the reason we chose
-it as a part of our descriptor.
-The viewpoint component is the element that makes distinction between features captured from a single query blob viewed 
-from different directions.
+By adding the view point component (128 bin), it produces a 308 bin histogram.\footnote{We used the availble implemetation in the Pointcloud Library (PCL)}
+The viewpoint component makes the descritor dependent to the point of view. The viewpoint component is the element that makes distinction between features captured from a single query blob viewed from different directions.
 It is discussed in more detail in Section \ref{FeatureExtract.ssec}.
 In spite of its dependency to a viewpoint it still preserves the property of being scale invariant. 
-Figure ~\ref{VFH_plot.figure} shows a sample plot of VFH and its components.
+% Figure ~\ref{VFH_plot.figure} shows a sample plot of VFH and its components.
 
-\begin{figure}[t]
-  \centerpsw{vfh_histogram}{0.65\columnwidth}
-  \caption[VFH histogram]
-  {A sample plot of VFH and its components.\cite{VFH_Definition}}
-  \label{VFH_plot.figure}
-\end{figure}
+% \begin{figure}[t]
+%   \centerpsw{vfh_histogram}{0.65\columnwidth}
+%   \caption[VFH histogram]
+%   {A sample plot of VFH and its components.\cite{VFH_Definition}}
+%   \label{VFH_plot.figure}
+% \end{figure}
 
-The images and definitions are taken from Point Cloud official website.
+
 
 The resulting object context descriptor is a vector with 310 elements that encodes a general orientation, height and
 geometrical properties of the query blob.
@@ -170,12 +238,29 @@ The structure of this descriptor and its elements are shown in Table ~\ref{Descr
 [Object context descriptor structure.]
 {Structure of object context descriptor.}
 \label{Descriptor.table}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|}
 \hline
-Field number & 1 & 2 & 3-310 \\
+% Field number & 1 & 2 & 3-310 \\
+Field number & Content\\
+
 \hline
-      Field content & Orientation & Height & VFH \\
+
+1 & Orientation\\
+
 \hline
+
+2 & Height\\
+
+\hline
+
+3-130 & Histogram of viewpoints \\
+
+\hline
+
+131-310 &  Histogram of surface angles\\
+
+\hline
+
 \end{tabular}
 \end{table}
 
@@ -303,19 +388,19 @@ Objects from different classes could be labeled with different values (\ref{Anno
 Figure ~\ref{TrashbinBounding.figure}, shows a scene in an office at Royal Institute of Technology(KTH). 
 The object of interest here is the trash bin, which is marked by a green bounding box. 
 This figure is an image of the scene whose pointcloud is available in our dataset and the annotation is done on 
-the pointcloud. 
-In Figure ~\ref{Annotation.figure} the annotated object could be seen in red within the scene's pointcloud.
+the pointcloud.In Figure ~\ref{Annotation.figure} the annotated object could be seen in red within the scene's pointcloud.
+
+
 It can be seen that some part of the floor is also colored in red, which means that part of the floor is also 
-annotated as the object.
-The reason is the object radius, that is given to annotation tool was not accurate enough or the center of the 
-object was not picked accurately.
-But it does not harm the result and this much of accuracy is more than enough.
-Usually annotation is done using a bounding box which consider the box surrounding the object as the object.
+annotated as the object.The reason is that the object's radius given to annotation tool was not accurate enough or the center of the 
+object was not picked accurately.But it does not harm the result and this much of accuracy is more than enough.
+In similar works, annotation is done using bounding box (2D or 3D) that considers a box with a certain dimention around the object. The content of that box approximates object points while other points which do not belong to the object itself, are included as well.
 Here, we exactly separate the points of the object by benefiting from the 3D coordinates of the points in the 
 pointcloud.
+
+
 As it is described in the algorithm ~\ref{Annotation.algorithm}, object segmentation is done automatically in a very 
-simple way.
-Based on the picked object center, selecting points from the 3D neighborhood of it separates object points from the 
+simple way. Based on the picked object center, selecting points from the 3D neighborhood of it separates object points from the 
 rest of the pointclouds.
 
 \begin{figure}[t]
@@ -605,362 +690,362 @@ negative ones.
 Figure ~\ref{DistanceOFPosandNegHist.figure} is showing the distance between random positive and negative samples.
 
 
-\section{Experimental Setup}
-\label{ExperimentalSetup.sec}
+% \section{Experimental Setup}
+% \label{ExperimentalSetup.sec}
 % Environment setup
-In order to do an evaluation on our method and the model, some experiments are carried out.
-To prepare a data-set for our experiments we needed to capture several pointclouds from different scenes and places which 
-include different object classes.
-
-
-To capture pointclouds we used different tools:
-RGBDSLAM \cite{RGBDSLAM} is an open source  package available in ROS. 
-Using this package and kinect sensor with OpenNi driver a 3D model of a scene can be captured. 
-The results are saved as pcd files.
-Pointclouds were captured from different types of places from KTH campus like offices, Kitchens and bathrooms including 
-different types of object that can be found in those places.
-
-There is also a project in CVAP\footnote{Computer Vision and Active Perception lab.} at KTH called KINECT@HOME \cite{aydemir2012kinect} which is a web based application uses
-kinect out puts to build 3D mesh model of objects and places. 
-A very good property of this system is that people from any part of the world capture their own video with kinect from different 
-places and scenes and post the videos to a server where the 3D reconstruction happens. 
-Through this means a good dataset can be prepared to train and test models.
-Of course, not all of the resulting pointclouds from this database are useful for our purpose due to the content and
-quality, but still there are applicable ones.
-%but there were a lot of models that we chose among and 
-%converted them to the pointcloud type that was compatible with our system.
-
-%TODO: Silberman's data set.
-
+% In order to do an evaluation on our method and the model, some experiments are carried out.
+% To prepare a data-set for our experiments we needed to capture several pointclouds from different scenes and places which 
+% include different object classes.
+% 
+% 
+% To capture pointclouds we used different tools:
+% RGBDSLAM \cite{RGBDSLAM} is an open source  package available in ROS. 
+% Using this package and kinect sensor with OpenNi driver a 3D model of a scene can be captured. 
+% The results are saved as pcd files.
+% Pointclouds were captured from different types of places from KTH campus like offices, Kitchens and bathrooms including 
+% different types of object that can be found in those places.
+% 
+% There is also a project in CVAP\footnote{Computer Vision and Active Perception lab.} at KTH called KINECT@HOME \cite{aydemir2012kinect} which is a web based application uses
+% kinect out puts to build 3D mesh model of objects and places. 
+% A very good property of this system is that people from any part of the world capture their own video with kinect from different 
+% places and scenes and post the videos to a server where the 3D reconstruction happens. 
+% Through this means a good dataset can be prepared to train and test models.
+% Of course, not all of the resulting pointclouds from this database are useful for our purpose due to the content and
+% quality, but still there are applicable ones.
+% but there were a lot of models that we chose among and 
+% converted them to the pointcloud type that was compatible with our system.
+% 
+% TODO: Silberman's data set.
+% 
 % Data set
-All resulting pointclouds are saved and based on their content, a name is assigned to them. 
-Then, they are divided into three subsets of train, validation and test. 
-Although, samples from the same pointcloud could be divided into train and validation sets, but we preferred to make them 
-separate even from pointcloud level to be sure of having reliable results. 
-Figure \ref{TrainClouds1.figure:edge} shows full pointclouds with different type of trash bins annotated in them. 
-These are the pointclouds used in experiments.
-%Each of these train and validation sets included different category of places.
+% All resulting pointclouds are saved and based on their content, a name is assigned to them. 
+% Then, they are divided into three subsets of train, validation and test. 
+% Although, samples from the same pointcloud could be divided into train and validation sets, but we preferred to make them 
+% separate even from pointcloud level to be sure of having reliable results. 
+% Figure \ref{TrainClouds1.figure:edge} shows full pointclouds with different type of trash bins annotated in them. 
+% These are the pointclouds used in experiments.
+% Each of these train and validation sets included different category of places.
 % Procedure
-
-
-\begin{figure} [htp]
-   \begin{center}
-    \subfigure[A partial view of a bathroom.]{\label{TrainClouds1.figure:Bathroom}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Bathroom_6thfloor}}
-    \subfigure[Full pointcloud of a kitchen.]{\label{TrainClouds1.figure:Kitchen4th}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Kitchen_4thFloor}} \\
-    \subfigure[A partial view of a office.]{\label{TrainClouds1.figure:Office607}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Office_607_Desk}}
-    \subfigure[A full pointcloud of an office.]{\label{TrainClouds1.figure:Office518}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Office_518}} \\
-    \subfigure[A full pointcloud of another kitchen in the same building.]{\label{TrainClouds1.figure:Kitchen6th}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Kitchen_6thFloor}}
-    \subfigure[A partial view of an office with lots of missing points.]{\label{TrainClouds1.figure:TestCloud}\includegraphics[width=2in,height=2in]{./Figures/TeastCloudAnootaion}} \\
-  \end{center}
-  \caption[Train set pointclouds]
-  {Point cloud used for extracting train samples with trash bin annotations. Bins are in different types and locations.(best viewed in color)}
-  \label{TrainClouds1.figure:edge}
-\end{figure}
-
-Table \ref{Objects.table} includes names of four different object classes used in experiments and the number of train samples extracted for each of them.
-It also shows what fraction of those samples were positive samples that are actually samples captured from context point blobs.
-
-
-\begin{table}
-\centering
-\caption
-[Object classes used in experiments.]
-{Object classes used in experiments with number of samples extracted for each of them for training and ratio of positive samples in them.}
-\label{Objects.table}
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-\multicolumn{2}{|c|}{Object} & \#Train samples & \#Positive Train samples & Ratio \\
-\hline
-      1 & Trash Bin & 142150 & 2493 & 1.7 \\
-\hline
-      2 & Telephone   & 119725 & 554  & 0.4 \\
-\hline
-      3 & Mouse     & 286825 & 1541 & 0.5 \\
-\hline
-      4 & Wiper     & 170025 & 3086 & 1.8 \\
-\hline
-
-\end{tabular}
-\end{table}
-
-
-In experiments with four different object categories mentioned in table \ref{Objects.table} few different scenes are considered to capture train pointclouds from.
-For each scene, a number of different location settings for objects are captured in different point cloud (figures \ref{TrainClouds2.figure:tmt1} and \ref{TrainClouds2.figure:tmt2}).
-Therefore, in the resulting train set each object has a number of instances in different scenes.
-
-\begin{figure} [htp]
-   \begin{center}
-    \subfigure[Partial cloud including telephone, mouse and trash bin.]{\label{TrainClouds2.figure:tmt1}\includegraphics[width=2in,height=2in]{./Figures/518_1_telefon_labels}}
-    \subfigure[The same scene with different location of the objects.]{\label{TrainClouds2.figure:tmt2}\includegraphics[width=2in,height=2in]{./Figures/518_3_labels}} \\
-    \subfigure[Partial cloud including white board wipers.]{\label{TrainClouds2.figure:wiper}\includegraphics[width=2in,height=2in]{./Figures/wiper_labels}}
-    \subfigure[A partial cloud including several instances of 3 object categories.]{\label{TrainClouds2.figure:tmt3}\includegraphics[width=2in,height=2in]{./Figures/518_4_labels}} \\
-  \end{center}
-  \caption[Train set pointclouds including four different object class.]
-  {Partial pointclouds including four object categories: trash bin(marked with blue circles), mouse(back circles), telephone(red circles) and wiper(green circles) in different location settings used in training.(best viewed in color)}
-  \label{TrainClouds2.figure:edge}
-\end{figure}
-
-
-
-
-After acquiring the pointclouds, some scripts were used that picks the pointcloud from the input dataset 
-and load them into PreProcess module and saves the results of each pointcloud separately in a useful way into the automatically
-generated environment. 
-Then the annotation tool were used to annotate objects of interest in the pointclouds. 
-All pointclouds were annotated with present objects of interest, regardless of them being in the train set or validation to 
-make evaluation possible on ones used for test as well. 
-Although in validation we would not be using labels from annotation until the end of classification, 
-this information is needed for evaluation which would be described later in next Section ~\ref{Results.sec}.
-
-
-In the next step, another script picks annotated clouds and their normals (estimated in PreProcess) into Feature extract 
-and  resulting feature vectors are saved in a folder for the corresponding object class under train or validation set, regarding
-which set their source pointcloud belong to.
-Then, a subset is randomly selected from the train samples in a way that includes all the positive samples and sevral times more of 
- negative samples to make the train set.
-In first experiments for Trash bin we have used train sets with 10 percent positive and 90 percent negative samples.
-In later experiments and for other objects train sets are generated with all extracted positive samples and two times more of negative samples.
-In these experiments positive sample have a 33\% share in the train set.
-
-At this point, all data sets are scaled with the same parameters, then the scaled train set is given to SVM train 
-to make the models for each of the object class's context. 
-During training, different values for the parameters are considered, and each resulting model is applied on samples from validation
-set. 
-Classification results with different examined values of these parameters are compared and best models are selected. 
-The results and evaluation procedure are discussed in Section ~\ref{Results.sec}.
-
-\section{Results}
-\label{Results.sec}
+% 
+% 
+% \begin{figure} [htp]
+%    \begin{center}
+%     \subfigure[A partial view of a bathroom.]{\label{TrainClouds1.figure:Bathroom}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Bathroom_6thfloor}}
+%     \subfigure[Full pointcloud of a kitchen.]{\label{TrainClouds1.figure:Kitchen4th}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Kitchen_4thFloor}} \\
+%     \subfigure[A partial view of a office.]{\label{TrainClouds1.figure:Office607}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Office_607_Desk}}
+%     \subfigure[A full pointcloud of an office.]{\label{TrainClouds1.figure:Office518}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Office_518}} \\
+%     \subfigure[A full pointcloud of another kitchen in the same building.]{\label{TrainClouds1.figure:Kitchen6th}\includegraphics[width=2in,height=2in]{./Figures/CVAP_Kitchen_6thFloor}}
+%     \subfigure[A partial view of an office with lots of missing points.]{\label{TrainClouds1.figure:TestCloud}\includegraphics[width=2in,height=2in]{./Figures/TeastCloudAnootaion}} \\
+%   \end{center}
+%   \caption[Train set pointclouds]
+%   {Point cloud used for extracting train samples with trash bin annotations. Bins are in different types and locations.(best viewed in color)}
+%   \label{TrainClouds1.figure:edge}
+% \end{figure}
+% 
+% Table \ref{Objects.table} includes names of four different object classes used in experiments and the number of train samples extracted for each of them.
+% It also shows what fraction of those samples were positive samples that are actually samples captured from context point blobs.
+% 
+% 
+% \begin{table}
+% \centering
+% \caption
+% [Object classes used in experiments.]
+% {Object classes used in experiments with number of samples extracted for each of them for training and ratio of positive samples in them.}
+% \label{Objects.table}
+% \begin{tabular}{|c|c|c|c|c|}
+% \hline
+% \multicolumn{2}{|c|}{Object} & \#Train samples & \#Positive Train samples & Ratio \\
+% \hline
+%       1 & Trash Bin & 142150 & 2493 & 1.7 \\
+% \hline
+%       2 & Telephone   & 119725 & 554  & 0.4 \\
+% \hline
+%       3 & Mouse     & 286825 & 1541 & 0.5 \\
+% \hline
+%       4 & Wiper     & 170025 & 3086 & 1.8 \\
+% \hline
+% 
+% \end{tabular}
+% \end{table}
+% 
+% 
+% In experiments with four different object categories mentioned in table \ref{Objects.table} few different scenes are considered to capture train pointclouds from.
+% For each scene, a number of different location settings for objects are captured in different point cloud (figures \ref{TrainClouds2.figure:tmt1} and \ref{TrainClouds2.figure:tmt2}).
+% Therefore, in the resulting train set each object has a number of instances in different scenes.
+% 
+% \begin{figure} [htp]
+%    \begin{center}
+%     \subfigure[Partial cloud including telephone, mouse and trash bin.]{\label{TrainClouds2.figure:tmt1}\includegraphics[width=2in,height=2in]{./Figures/518_1_telefon_labels}}
+%     \subfigure[The same scene with different location of the objects.]{\label{TrainClouds2.figure:tmt2}\includegraphics[width=2in,height=2in]{./Figures/518_3_labels}} \\
+%     \subfigure[Partial cloud including white board wipers.]{\label{TrainClouds2.figure:wiper}\includegraphics[width=2in,height=2in]{./Figures/wiper_labels}}
+%     \subfigure[A partial cloud including several instances of 3 object categories.]{\label{TrainClouds2.figure:tmt3}\includegraphics[width=2in,height=2in]{./Figures/518_4_labels}} \\
+%   \end{center}
+%   \caption[Train set pointclouds including four different object class.]
+%   {Partial pointclouds including four object categories: trash bin(marked with blue circles), mouse(back circles), telephone(red circles) and wiper(green circles) in different location settings used in training.(best viewed in color)}
+%   \label{TrainClouds2.figure:edge}
+% \end{figure}
+% 
+% 
+% 
+% 
+% After acquiring the pointclouds, some scripts were used that picks the pointcloud from the input dataset 
+% and load them into PreProcess module and saves the results of each pointcloud separately in a useful way into the automatically
+% generated environment. 
+% Then the annotation tool were used to annotate objects of interest in the pointclouds. 
+% All pointclouds were annotated with present objects of interest, regardless of them being in the train set or validation to 
+% make evaluation possible on ones used for test as well. 
+% Although in validation we would not be using labels from annotation until the end of classification, 
+% this information is needed for evaluation which would be described later in next Section ~\ref{Results.sec}.
+% 
+% 
+% In the next step, another script picks annotated clouds and their normals (estimated in PreProcess) into Feature extract 
+% and  resulting feature vectors are saved in a folder for the corresponding object class under train or validation set, regarding
+% which set their source pointcloud belong to.
+% Then, a subset is randomly selected from the train samples in a way that includes all the positive samples and sevral times more of 
+%  negative samples to make the train set.
+% In first experiments for Trash bin we have used train sets with 10 percent positive and 90 percent negative samples.
+% In later experiments and for other objects train sets are generated with all extracted positive samples and two times more of negative samples.
+% In these experiments positive sample have a 33\% share in the train set.
+% 
+% At this point, all data sets are scaled with the same parameters, then the scaled train set is given to SVM train 
+% to make the models for each of the object class's context. 
+% During training, different values for the parameters are considered, and each resulting model is applied on samples from validation
+% set. 
+% Classification results with different examined values of these parameters are compared and best models are selected. 
+% The results and evaluation procedure are discussed in Section ~\ref{Results.sec}.
+% 
+% \section{Results}
+% \label{Results.sec}
 % Definitions and metrics
-In this section, we take a look at some results and analyze and evaluate them to see how good our method performs.
-
-\subsection{Evaluation metric}
-\label{EvaluationMetric.ssec}
-
-%As mentioned before there could be negative samples in train set that are labeled as negative just because they were not captured 
-%from a neighborhood of an annotated object while they have very similar features to positive samples. 
-%Such samples need to be predicted as positive. 
-
-Here we define the metric and evaluation method that we considered in this work.
-Metrics such as accuracy or prediction is not something that can show the performance of our system.
-Accuracy is measuring number of samples that are correctly classified with respect to the total number of samples.
-Here we do not have direct access to the number of correct classification. 
-
-Based on the problem definition, we are looking for possible context of an object, which regards to the locations that an 
-object is expected to be found, not just location that an object is present in.
-Intuitively, set of points that belong to an actual object (if there is an actual object in the scene) is a subset of all 
-possible object points in that scene.
-Therefore, actual object points ($Lp$) are a subset of predicted positive points ($Pp$) if the model and classifier perform 
-well (equation \ref{Lp-PpRelation.eq}).
-
-\begin{equation}
- \label{Lp-PpRelation.eq}
- Lp \subset Pp
-\end{equation}
-
-In other words, from a good result, we expect any random point sampling which is an actual object point to be within 
-predicted positive points.
-Similar metric is used in recently published and praised work \cite{aydemir2012_3Dcontext}.
-%if the predictions give us points of the pointcloud where there is a high probability of finding the object, it
-%would be what we want. 
-%The point here is, that the location of the object would be a subset of this predicted set. 
-With this definition there would be a problem: if all points get predicted as positive then actual object points would 
-definitely be a subset of it, while our classification has failed.
-As a result, we define a good result as predicted set of locations that reduces our search space for the object as much as 
-possible while it preserves the high probability of finding the object.
-
-Equation ~\ref{Eval.eq} shows the evaluation metric, where $E(\tau)$ is the the value of the metric with respect to a 
-probability threshold $\tau$. 
-This threshold sets the boundary for the lowest probability value that the prediction for a point should have to be 
-considered as positive. 
-%This threshold is assigned with a value in a loop that as a result in each iteration a top fraction of the samples are being 
-%picked and analyzed. 
-The threshold is computed based on an increasing number of considered points.
-For instance, the threshold takes a value that separates the top five percent of the points with respect to their prediction 
-value.
-Then, the probability of having the object in this fraction of points is computed.
-
-
-$Pp_{\tau}$ is predicted positive sample with respect to the value of the threshold and $n(x)$ is the number of 
-members in the set $x$, e.g. $n(Lp)$ it is number of points belonging to $Lp$. $Lp$ is the 
-labeled positive points in the data-set or in other word the annotated object.
-
-\begin{equation}
- \label{Eval.eq}
-    E(\tau) = \frac{n({Pp_{\tau}} \cap {Lp})}{n(Lp)} 
-\end{equation}
-
-This value is between zero and one, and a value closer to one, while the threshold is high enough, shows a better result.
-This metric is also used in experiments to find the best models and parameters. 
-Here we also translate the sample base results into point base which means the result is assigned to the point for which 
-the sample is taken.
-%Therefore, the prediction directly shows if a candidate OPoint is a possible object point or not.
-
-%Figure ~\ref{Eval80ExperimentTop10.figure} shows the value of $E$ for top ten percent of the points with respect to their 
-%prediction probability in experiments with 80 different configuration of weights and gamma.
-%As it can be seen the results look pretty good.
-
+% In this section, we take a look at some results and analyze and evaluate them to see how good our method performs.
+% 
+% \subsection{Evaluation metric}
+% \label{EvaluationMetric.ssec}
+% 
+% As mentioned before there could be negative samples in train set that are labeled as negative just because they were not captured 
+% from a neighborhood of an annotated object while they have very similar features to positive samples. 
+% Such samples need to be predicted as positive. 
+% 
+% Here we define the metric and evaluation method that we considered in this work.
+% Metrics such as accuracy or prediction is not something that can show the performance of our system.
+% Accuracy is measuring number of samples that are correctly classified with respect to the total number of samples.
+% Here we do not have direct access to the number of correct classification. 
+% 
+% Based on the problem definition, we are looking for possible context of an object, which regards to the locations that an 
+% object is expected to be found, not just location that an object is present in.
+% Intuitively, set of points that belong to an actual object (if there is an actual object in the scene) is a subset of all 
+% possible object points in that scene.
+% Therefore, actual object points ($Lp$) are a subset of predicted positive points ($Pp$) if the model and classifier perform 
+% well (equation \ref{Lp-PpRelation.eq}).
+% 
+% \begin{equation}
+%  \label{Lp-PpRelation.eq}
+%  Lp \subset Pp
+% \end{equation}
+% 
+% In other words, from a good result, we expect any random point sampling which is an actual object point to be within 
+% predicted positive points.
+% Similar metric is used in recently published and praised work \cite{aydemir2012_3Dcontext}.
+% if the predictions give us points of the pointcloud where there is a high probability of finding the object, it
+% would be what we want. 
+% The point here is, that the location of the object would be a subset of this predicted set. 
+% With this definition there would be a problem: if all points get predicted as positive then actual object points would 
+% definitely be a subset of it, while our classification has failed.
+% As a result, we define a good result as predicted set of locations that reduces our search space for the object as much as 
+% possible while it preserves the high probability of finding the object.
+% 
+% Equation ~\ref{Eval.eq} shows the evaluation metric, where $E(\tau)$ is the the value of the metric with respect to a 
+% probability threshold $\tau$. 
+% This threshold sets the boundary for the lowest probability value that the prediction for a point should have to be 
+% considered as positive. 
+% This threshold is assigned with a value in a loop that as a result in each iteration a top fraction of the samples are being 
+% picked and analyzed. 
+% The threshold is computed based on an increasing number of considered points.
+% For instance, the threshold takes a value that separates the top five percent of the points with respect to their prediction 
+% value.
+% Then, the probability of having the object in this fraction of points is computed.
+% 
+% 
+% $Pp_{\tau}$ is predicted positive sample with respect to the value of the threshold and $n(x)$ is the number of 
+% members in the set $x$, e.g. $n(Lp)$ it is number of points belonging to $Lp$. $Lp$ is the 
+% labeled positive points in the data-set or in other word the annotated object.
+% 
+% \begin{equation}
+%  \label{Eval.eq}
+%     E(\tau) = \frac{n({Pp_{\tau}} \cap {Lp})}{n(Lp)} 
+% \end{equation}
+% 
+% This value is between zero and one, and a value closer to one, while the threshold is high enough, shows a better result.
+% This metric is also used in experiments to find the best models and parameters. 
+% Here we also translate the sample base results into point base which means the result is assigned to the point for which 
+% the sample is taken.
+% Therefore, the prediction directly shows if a candidate OPoint is a possible object point or not.
+% 
+% Figure ~\ref{Eval80ExperimentTop10.figure} shows the value of $E$ for top ten percent of the points with respect to their 
+% prediction probability in experiments with 80 different configuration of weights and gamma.
+% As it can be seen the results look pretty good.
+% 
 % \begin{figure}[t]
 %   \centerpsw{Eval80ExperimentTop10}{0.65\columnwidth}
 %   \caption[Evaluation result of 80 experiments]
 %   {Top 10 percent of positive predictions in experiments with 80 different configurations for parameters.}
 %   \label{Eval80ExperimentTop10.figure}
 % \end{figure}
-
-\subsection{Evaluation results}
-\label{EvaluationResult.ssec}
-
-\begin{figure}[t]
-  \centerpsw{evalMorevalues}{0.85\columnwidth}
-  \caption[Evaluation diagram for experiments with Gaussian kernel.]
-  {Evaluation diagram for experiments with Gaussian kernel. Each line corresponds to a value for w-1.(Best viewed in color.)}
-  \label{evalSevenExp.figure}
-\end{figure}
-We have two sets of experiments, in the first one the learning is done using one Gaussian kernel on the whole feature vector.
-In the second set we used double kernel of type chi-square with equal weights.
-One is applied on first two field of the feature vector(orientation and height) and the other on the VFH part.
-
-Figure ~\ref{evalSevenExp.figure} shows this evaluation for seven experiments with different values for w(-1) which is the 
-parameter setting the weight of the negative class in SVM classifier.
-In these experiments a single Gaussian kernel is employed to build the model of trash bin context.
-The value is depicted with respect to the fraction of points considered.
-
-Considering best models, it can be inferred from the curves that for instance, considering top five percent of the points 
-contains twenty percent of the object which is a good result. 
-In other words, reducing the the search space to only 5 percent we still have four time chance of finding the object.
-
-
-
-Figure ~\ref{TrashPrediction.figure:edge} shows the prediction of trash bin context on a full pointcloud of an office. 
-The marked region shows the points with highest probability values(top 1\%).
-This predicted context reaches the trash bin which is present in the scene when the probability threshold reaches the 
-probability of top 5\% of points.
-The interesting point is that this trained model is suggesting that corner is the best location in this scene to find a 
-trash bin or put one (based on the train data).
-
-\begin{figure} [htp]
-   \begin{center}
-    \subfigure[A test pointcloud for trash bin model, marked region with red circle is the predicted context.]{\label{TrashPrediction.figure:full}\includegraphics[width=3in,height=3in]{./Figures/TrashBinPrediction}}
-    \subfigure[Focused to predicted region.]{\label{TrashPrediction.figure:focused}\includegraphics[width=3in,height=3in]{./Figures/TrashBinPrediction_focused}} \\
-  \end{center}
-  \caption[Prediction of Trash bin model.]
-  {Prediction of Trash bin context on a full pointcloud of an office. The marked region shows the points with highest probability values(top 1\%).(best viewed in color)}
-  \label{TrashPrediction.figure:edge}
-\end{figure}
-
-In later experiments that we used multi kernel of type chi-square, there was a significant improvement on the results.
-As the first two fields of our feature vector are two float values and the rest is histogram, they are to be treaded 
-in different ways.
-So we separated the kernels applied on each of these parts.
-The visualized results of predictions using these kernels with equal weights are shown in Figure ~\ref{ContextPrediction_518_1.figure:edge} 
-for the four object we used in these experiments.
-
-\begin{figure} [htp]
-   \begin{center}
-    \subfigure[Predicted context for Mouse.]{\label{ContextPrediction_518_1.figure:wiper}\includegraphics[width=2in,height=2in]{./Figures/518_1_MousePrediction_c1g0}}
-    \subfigure[Predicted context for white-board wiper.]{\label{ContextPrediction_518_1.figure:mouse}\includegraphics[width=2in,height=2in]{./Figures/518_1_WiperPrediction_c1g0}} \\
-    \subfigure[Predicted context for Telephone.]{\label{ContextPrediction_518_1.figure:Telephone}\includegraphics[width=2in,height=2in]{./Figures/518_1_TelefonPrediction_c1g0}}
-    \subfigure[Predicted context for Trash Bin.]{\label{ContextPrediction_518_1.figure:TrashBin}\includegraphics[width=2in,height=2in]{./Figures/518_1_TrashBinPrediction_c1g0}} \\
-  \end{center}
-  \caption[Visualization of context model prediction on sample cloud 1 from validation set.]
-  {Visualization of context model prediction on sample cloud 1 as a validation cloud, for four objects. The key point predicted as positive and the blob around it is projected on the pointcloud in cyan color.(best viewed in color)}
-  \label{ContextPrediction_518_1.figure:edge}
-\end{figure}
-
-In Figure ~\ref{ContextPrediction_518_1.figure:edge}, the predicted contexts of four object used in experiments 
-are projected on the pointcloud of an office.
-It should be noticed that the regions shown in cyan, are blobs with a key point in the center which is predicted as 
-context.
-
-The corresponding evaluation values for results shown in Figure ~\ref{ContextPrediction_518_1.figure:edge} are depicted
-in Figure ~\ref{Eval_518_1.figure}.
-A simple comparison between curves in this figure and Figure ~\ref{evalSevenExp.figure} shows the improvement of the 
-results.
-
-\begin{figure}
-  \begin{center}
-   \centerpsw{Eval4Objects}{0.85\columnwidth}
-  \caption[Evaluation results for four object classes.]
-  {Evaluation results of context prediction for four objects Mouse, Telephone, Trash Bin and wiper. These results are from experiments using chi-square multi kernel.}
-  \label{Eval_518_1.figure}
-  \end{center}
-\end{figure}
-
-To compare the performance of the system regarding each of these four object class, the values of $E$ in a certain 
-ratio of selected points with respect to all points in the pointcloud is considered for each of these object classes.
-Table ~\ref{performance.table} contains these values for the ratio of top 5\%.
-
-\begin{table}
-\centering
-\caption
-[Performance of the system for four object classes.]
-{Performance of the system for four object classes.}
-\label{performance.table}
-\begin{tabular}{|c|c|c|}
-\hline
-Object & E in top 5\% of points & The ratio that E reaches to 1 \\
-\hline
-      Mouse & 0.6667 & 15 \\
-\hline
-      Telephone & 1 & 5 \\
-\hline
-      Trash Bin & 0.3333 &  40\\
-\hline
-      Wiper & 0.42 & 60 \\
-\hline
-\end{tabular}
-\end{table}
-
-As it can be seen in table ~\ref{performance.table}, the best performance of the system is for Telephone and after 
-that for Mouse.
-These two are often found in a similar context which can be a good reason for these results.
-The context for trash bin, at least based on our train set, can have wider variety compared to mouse and telephone.
-That is why its performance value is the lowest.
-
-But for wiper, as the context is usually similar it can not be a good explanation.
-In the wiper case, the reason for its low performance should be the wide range of heights this object can be located in.
-We consider the height as an important feature in building our models which makes it very effective.
-The effectiveness of height seems to be not so useful in the case of wiper.
-A solution can be using smaller weights for the height feature in modeling these object classes.
-
-\begin{figure} [htp]
-   \begin{center}
-    \subfigure[Predicted context for Mouse.]{\label{ContextPrediction_Test_512.figure:wiper}\includegraphics[width=2in,height=2in]{./Figures/Test21_2_13MousePredict_c1g0.eps}}
-    \subfigure[Predicted context for white-board wiper.]{\label{ContextPrediction_Test_512.figure:mouse}\includegraphics[width=2in,height=2in]{./Figures/Test_wiperPrediction.eps}} \\
-    \subfigure[Predicted context for Telephone.]{\label{ContextPrediction_Test_512.figure:Telephone}\includegraphics[width=2in,height=2in]{./Figures/Test_telefonPredict_c10g0.eps}}
-    \subfigure[Predicted context for Trash Bin.]{\label{ContextPrediction_Test_512.figure:TrashBin}\includegraphics[width=2in,height=2in]{./Figures/Test_TrashBinPrediction_c1g0.eps}} \\
-  \end{center}
-  \caption[Visualization of context model prediction on sample cloud 2 as a test cloud.]
-  {Visualization of context model prediction on sample cloud 2 as a test cloud for four objects. This pointcloud does not include 
-  these objects except trash bin.(best viewed in color)}
-  \label{ContextPrediction_Test_512.figure:edge}
-\end{figure}
-
-Figure ~\ref{ContextPrediction_Test_512.figure:edge} shows the predicted contexts of these four object class on the 
-pointcloud of an office from test set.
-In this test cloud no instance of wiper, mouse or telephone is present.
-The reasonability of the predicted object contexts are visible in this figure despite absence of those instances.
-
-\subsection*{Summery}
-As mentioned in Section \ref{ExperimentalSetup.sec}, in the experiments we used pointclouds of different place categories like 
-kitchen, bathroom and offices which included a number of instances of the four object category.
-Each of these pointclouds in average contained around 8 million points out of which we extracted samples for a number of keypoints.
-The average number of samples extracted from each pointcloud is approximately 50000.
-Samples from several pointclouds are assembled in a set from which a train set is derived.
-The set of clouds are divided into train (45\%), validation (15\%) and test(40\%).
-Parameter and best model selection is done using validation set.
-
-The results show that the predicted context is able to reduce the search space significantly while preserves the high chance of
-finding the object of interest.
-It also implies that the context of objects are modeled in a reliable way which makes it useful in place categorization where
-we need to know just the possibility of presence of an object class in a query place (discussed in Chapter \ref{UsingObjectContextforPlaceClassification.ch}).
-By tweaking the threshold of the prediction, the search space can be extended in a smart way rather than a greedy manner.
-
-The time needed to train a model depends on the size of train set and the used parameters which in these experiments is in average
-89 second.
-Test takes approximately 45 second and the time needed for feature extraction per sample is 68 ms.
-
-
+% 
+% \subsection{Evaluation results}
+% \label{EvaluationResult.ssec}
+% 
+% \begin{figure}[t]
+%   \centerpsw{evalMorevalues}{0.85\columnwidth}
+%   \caption[Evaluation diagram for experiments with Gaussian kernel.]
+%   {Evaluation diagram for experiments with Gaussian kernel. Each line corresponds to a value for w-1.(Best viewed in color.)}
+%   \label{evalSevenExp.figure}
+% \end{figure}
+% We have two sets of experiments, in the first one the learning is done using one Gaussian kernel on the whole feature vector.
+% In the second set we used double kernel of type chi-square with equal weights.
+% One is applied on first two field of the feature vector(orientation and height) and the other on the VFH part.
+% 
+% Figure ~\ref{evalSevenExp.figure} shows this evaluation for seven experiments with different values for w(-1) which is the 
+% parameter setting the weight of the negative class in SVM classifier.
+% In these experiments a single Gaussian kernel is employed to build the model of trash bin context.
+% The value is depicted with respect to the fraction of points considered.
+% 
+% Considering best models, it can be inferred from the curves that for instance, considering top five percent of the points 
+% contains twenty percent of the object which is a good result. 
+% In other words, reducing the the search space to only 5 percent we still have four time chance of finding the object.
+% 
+% 
+% 
+% Figure ~\ref{TrashPrediction.figure:edge} shows the prediction of trash bin context on a full pointcloud of an office. 
+% The marked region shows the points with highest probability values(top 1\%).
+% This predicted context reaches the trash bin which is present in the scene when the probability threshold reaches the 
+% probability of top 5\% of points.
+% The interesting point is that this trained model is suggesting that corner is the best location in this scene to find a 
+% trash bin or put one (based on the train data).
+% 
+% \begin{figure} [htp]
+%    \begin{center}
+%     \subfigure[A test pointcloud for trash bin model, marked region with red circle is the predicted context.]{\label{TrashPrediction.figure:full}\includegraphics[width=3in,height=3in]{./Figures/TrashBinPrediction}}
+%     \subfigure[Focused to predicted region.]{\label{TrashPrediction.figure:focused}\includegraphics[width=3in,height=3in]{./Figures/TrashBinPrediction_focused}} \\
+%   \end{center}
+%   \caption[Prediction of Trash bin model.]
+%   {Prediction of Trash bin context on a full pointcloud of an office. The marked region shows the points with highest probability values(top 1\%).(best viewed in color)}
+%   \label{TrashPrediction.figure:edge}
+% \end{figure}
+% 
+% In later experiments that we used multi kernel of type chi-square, there was a significant improvement on the results.
+% As the first two fields of our feature vector are two float values and the rest is histogram, they are to be treaded 
+% in different ways.
+% So we separated the kernels applied on each of these parts.
+% The visualized results of predictions using these kernels with equal weights are shown in Figure ~\ref{ContextPrediction_518_1.figure:edge} 
+% for the four object we used in these experiments.
+% 
+% \begin{figure} [htp]
+%    \begin{center}
+%     \subfigure[Predicted context for Mouse.]{\label{ContextPrediction_518_1.figure:wiper}\includegraphics[width=2in,height=2in]{./Figures/518_1_MousePrediction_c1g0}}
+%     \subfigure[Predicted context for white-board wiper.]{\label{ContextPrediction_518_1.figure:mouse}\includegraphics[width=2in,height=2in]{./Figures/518_1_WiperPrediction_c1g0}} \\
+%     \subfigure[Predicted context for Telephone.]{\label{ContextPrediction_518_1.figure:Telephone}\includegraphics[width=2in,height=2in]{./Figures/518_1_TelefonPrediction_c1g0}}
+%     \subfigure[Predicted context for Trash Bin.]{\label{ContextPrediction_518_1.figure:TrashBin}\includegraphics[width=2in,height=2in]{./Figures/518_1_TrashBinPrediction_c1g0}} \\
+%   \end{center}
+%   \caption[Visualization of context model prediction on sample cloud 1 from validation set.]
+%   {Visualization of context model prediction on sample cloud 1 as a validation cloud, for four objects. The key point predicted as positive and the blob around it is projected on the pointcloud in cyan color.(best viewed in color)}
+%   \label{ContextPrediction_518_1.figure:edge}
+% \end{figure}
+% 
+% In Figure ~\ref{ContextPrediction_518_1.figure:edge}, the predicted contexts of four object used in experiments 
+% are projected on the pointcloud of an office.
+% It should be noticed that the regions shown in cyan, are blobs with a key point in the center which is predicted as 
+% context.
+% 
+% The corresponding evaluation values for results shown in Figure ~\ref{ContextPrediction_518_1.figure:edge} are depicted
+% in Figure ~\ref{Eval_518_1.figure}.
+% A simple comparison between curves in this figure and Figure ~\ref{evalSevenExp.figure} shows the improvement of the 
+% results.
+% 
+% \begin{figure}
+%   \begin{center}
+%    \centerpsw{Eval4Objects}{0.85\columnwidth}
+%   \caption[Evaluation results for four object classes.]
+%   {Evaluation results of context prediction for four objects Mouse, Telephone, Trash Bin and wiper. These results are from experiments using chi-square multi kernel.}
+%   \label{Eval_518_1.figure}
+%   \end{center}
+% \end{figure}
+% 
+% To compare the performance of the system regarding each of these four object class, the values of $E$ in a certain 
+% ratio of selected points with respect to all points in the pointcloud is considered for each of these object classes.
+% Table ~\ref{performance.table} contains these values for the ratio of top 5\%.
+% 
+% \begin{table}
+% \centering
+% \caption
+% [Performance of the system for four object classes.]
+% {Performance of the system for four object classes.}
+% \label{performance.table}
+% \begin{tabular}{|c|c|c|}
+% \hline
+% Object & E in top 5\% of points & The ratio that E reaches to 1 \\
+% \hline
+%       Mouse & 0.6667 & 15 \\
+% \hline
+%       Telephone & 1 & 5 \\
+% \hline
+%       Trash Bin & 0.3333 &  40\\
+% \hline
+%       Wiper & 0.42 & 60 \\
+% \hline
+% \end{tabular}
+% \end{table}
+% 
+% As it can be seen in table ~\ref{performance.table}, the best performance of the system is for Telephone and after 
+% that for Mouse.
+% These two are often found in a similar context which can be a good reason for these results.
+% The context for trash bin, at least based on our train set, can have wider variety compared to mouse and telephone.
+% That is why its performance value is the lowest.
+% 
+% But for wiper, as the context is usually similar it can not be a good explanation.
+% In the wiper case, the reason for its low performance should be the wide range of heights this object can be located in.
+% We consider the height as an important feature in building our models which makes it very effective.
+% The effectiveness of height seems to be not so useful in the case of wiper.
+% A solution can be using smaller weights for the height feature in modeling these object classes.
+% 
+% \begin{figure} [htp]
+%    \begin{center}
+%     \subfigure[Predicted context for Mouse.]{\label{ContextPrediction_Test_512.figure:wiper}\includegraphics[width=2in,height=2in]{./Figures/Test21_2_13MousePredict_c1g0.eps}}
+%     \subfigure[Predicted context for white-board wiper.]{\label{ContextPrediction_Test_512.figure:mouse}\includegraphics[width=2in,height=2in]{./Figures/Test_wiperPrediction.eps}} \\
+%     \subfigure[Predicted context for Telephone.]{\label{ContextPrediction_Test_512.figure:Telephone}\includegraphics[width=2in,height=2in]{./Figures/Test_telefonPredict_c10g0.eps}}
+%     \subfigure[Predicted context for Trash Bin.]{\label{ContextPrediction_Test_512.figure:TrashBin}\includegraphics[width=2in,height=2in]{./Figures/Test_TrashBinPrediction_c1g0.eps}} \\
+%   \end{center}
+%   \caption[Visualization of context model prediction on sample cloud 2 as a test cloud.]
+%   {Visualization of context model prediction on sample cloud 2 as a test cloud for four objects. This pointcloud does not include 
+%   these objects except trash bin.(best viewed in color)}
+%   \label{ContextPrediction_Test_512.figure:edge}
+% \end{figure}
+% 
+% Figure ~\ref{ContextPrediction_Test_512.figure:edge} shows the predicted contexts of these four object class on the 
+% pointcloud of an office from test set.
+% In this test cloud no instance of wiper, mouse or telephone is present.
+% The reasonability of the predicted object contexts are visible in this figure despite absence of those instances.
+% 
+% \subsection*{Summery}
+% As mentioned in Section \ref{ExperimentalSetup.sec}, in the experiments we used pointclouds of different place categories like 
+% kitchen, bathroom and offices which included a number of instances of the four object category.
+% Each of these pointclouds in average contained around 8 million points out of which we extracted samples for a number of keypoints.
+% The average number of samples extracted from each pointcloud is approximately 50000.
+% Samples from several pointclouds are assembled in a set from which a train set is derived.
+% The set of clouds are divided into train (45\%), validation (15\%) and test(40\%).
+% Parameter and best model selection is done using validation set.
+% 
+% The results show that the predicted context is able to reduce the search space significantly while preserves the high chance of
+% finding the object of interest.
+% It also implies that the context of objects are modeled in a reliable way which makes it useful in place categorization where
+% we need to know just the possibility of presence of an object class in a query place (discussed in Chapter \ref{UsingObjectContextforPlaceClassification.ch}).
+% By tweaking the threshold of the prediction, the search space can be extended in a smart way rather than a greedy manner.
+% 
+% The time needed to train a model depends on the size of train set and the used parameters which in these experiments is in average
+% 89 second.
+% Test takes approximately 45 second and the time needed for feature extraction per sample is 68 ms.
+% 
+% 
 % 
 % \begin{figure}[t]
 %   \centerpsw{Eval80Experiment}{0.65\columnwidth}
