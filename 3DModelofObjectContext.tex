@@ -106,7 +106,8 @@ We used PCL ~\cite{Rusu_ICRA2011_PCL} for pointcloud processing and Microsoft Ki
 Here are some terms that are used through the rest of the text:\\
 $Point$ $of$ $Interest$: A point from a pointcloud for or around which an analysis is being done.\\
 $Blob$: A subset of the pointcloud within a radius $r$ around a point of interest.\\
-$Query$ $blob$ : The blub from which we are extracting the features.
+$Query$ $blob$ : The blub from which we are extracting the features.\\
+$TFP$ $pointcloud$: Template Full Point pointcloud, is an artificially generated set of point coordinates in the pointcloud format (3D Matrix of points) to be used as candidate viewpoints. It makes a dense cubical pointcloud where its density is based on the selected voxel size. The dimention of TFP pointcloud gets set in a way that it can cover the entire pointloud from which we want to extract features (for train or test).\\
 
 
 
@@ -332,15 +333,15 @@ As illustrated in Figure ~\ref{SystemOverview.figure}, apart from SVM (\cite{LIB
 \REQUIRE Sensor Location and orientation.
 \medskip
 
-\STATE Transfer the input cloud based on Sensor location and orientation from camera coordinate to world coordinate, and store the 
+\STATE Transform the input cloud, based on the Sensor location and orientation from the camera coordinate system to the world coordinate system, and store the 
 result.
 \STATE Estimate Normals and store.
-\STATE Convert the Pointcloud\_Transfered to Point type XYZRGBL and store in Pointcloud\_Converted.
+\STATE Convert the Pointcloud\_Transformed to Point type XYZRGBL and store in Pointcloud\_Converted.
 \STATE Estimate 3DMINMAX of the Pointcloud\_Converted.
 \STATE Using result from previous step, generate TFP pointcloud.
 
 \medskip
-\ENSURE Pointcloud\_Transfered.
+\ENSURE Pointcloud\_Transformed.
 \ENSURE Pointcloud\_Normals.
 \ENSURE Pointcloud\_Converted(XYZRGBL).
 \ENSURE Pointcloud\_Generated(TFP).
@@ -364,7 +365,7 @@ Objects from different classes could be labeled with different values (\ref{Anno
 
 \begin{algorithm}[t]
 \begin{algorithmic}[1]
-\REQUIRE Pointcloud\_Transfered(XYZRGB).
+\REQUIRE Pointcloud\_Converted(XYZRGBL).
 \REQUIRE Object radius(rough estimate).
 \medskip
 
@@ -417,7 +418,7 @@ rest of the pointclouds.
   \label{Annotation.figure}
 \end{figure}
 
-This package is available with source to be used by other researchers and get improved by developers.\cite{AnnotationGithub}
+We have pubilshed this package with its source in Github to be used by other researchers and improved by other developers.\cite{AnnotationGithub}
 
 % Feature extraction
 
