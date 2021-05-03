@@ -81,8 +81,7 @@ the scene which corresponds to their likelihood of being the context of a partic
 
 
 The input cloud is first preprocessed and then get annotated with instances of the object class whose context model is being built. 
-Feature extraction would run on this annotated pointcloud and outputs the training samples. 
-Train samples would be combined from several different pointclouds for the same object class to make the train set. 
+Feature extraction run on this annotated pointcloud and outputs the training samples. Train samples are combined from several different pointclouds for the same object class to make the train set. 
 Then the train set is given to SVM classifier to make the context model. A block diagram in figure ~\ref{SystemOverview.figure} shows 
 the system overview.
 
@@ -104,10 +103,14 @@ We used PCL ~\cite{Rusu_ICRA2011_PCL} for pointcloud processing and Microsoft Ki
 \subsection{Defining some used terms}
 
 Here are some terms that are used through the rest of the text:\\
-$Point$ $of$ $Interest$: A point from a pointcloud for or around which an analysis is being done.\\
-$Blob$: A subset of the pointcloud within a radius $r$ around a point of interest.\\
-$Query$ $blob$ : The blub from which we are extracting the features.\\
-$TFP$ $pointcloud$: Template Full Point pointcloud, is an artificially generated set of point coordinates in the pointcloud format (3D Matrix of points) to be used as candidate viewpoints. It makes a dense cubical pointcloud where its density is based on the selected voxel size. The dimention of TFP pointcloud gets set in a way that it can cover the entire pointloud from which we want to extract features (for train or test).\\
+\\
+\textbf{\textit{Point of Interest}}: A point from a pointcloud for or around which an analysis is being done.\\
+\\
+\textbf{\textit{Blob}}: A subset of the pointcloud within a radius $r$ around a point of interest.\\
+\\
+\textbf{\textit{Query blob}}: The blub from which we are extracting the features.\\
+\\
+\textbf{\textit{TFP pointcloud}}: Template Full Point pointcloud, is an artificially generated set of point coordinates in the pointcloud format (3D Matrix of points) to be used as candidate viewpoints. It makes a dense cubical pointcloud where its density is based on the selected voxel size. The dimention of TFP pointcloud gets set in a way that it can cover the entire pointloud from which we want to extract features (for train or test).\\
 
 
 
@@ -161,7 +164,7 @@ each normal. This is why these features are scale invariant.
 
 The second component collects the relative pan, tilt and yaw angles between direction of 
 the surface normal at the centeroid of a query blob and the surface normals at other points in the blob.
-So for each query blob the mean curvature around its central point is encoded, using a multidimensional histogram of values.If $C$ is the center of the query blub and $p_i$ is one of $k-nearest$ $neighbours$ of the centeroid and $n_i$ is the surface normal at $p_i$, we have 3 angles and a distance to be captured in this histogram. $\alpha,\theta, \phi$ and $d$, where the angles are pan, tilt and yaw between each pair of normals and $d$ is the distance between $p_i$ and $C$.  
+So for each query blob the mean curvature around its central point is encoded, using a multidimensional histogram of values.If $C$ is the center of the query blub and $p_i$ is one of {\it k-nearest neighbours} of the centeroid and $n_i$ is the surface normal at $p_i$, we have 3 angles and a distance to be captured in this histogram. $\alpha,\theta, \phi$ and $d$, where the angles are pan, tilt and yaw between each pair of normals and $d$ is the distance between $p_i$ and $C$.  
 
 
 \begin{equation}
@@ -425,18 +428,18 @@ We have pubilshed this package with its source in Github to be used by other res
 \subsubsection{FeatureExtract}
 \label{FeatureExtract.ssec}
 First, we Introduce some terms used in this part. They are as follows:
-\begin{itemize}
-  \item Blob: A sub set of the Point-cloud which includes a number of points in a neighborhood within a specific radius.
-  \item Query Blob: The blob from which the features are being extracted.
-  \item QPoint: The Query Point that is the center of the query blob. It is a point on the context of the object.
-  \item OPoint: The Object point is the point in surrounding of the Qpoint which is an object point in a positive sample.
- \end{itemize}
+\\
+%   \item Blob: A sub set of the Point-cloud which includes a number of points in a neighborhood within a specific radius.
+%   \item Query Blob: The blob from which the features are being extracted.
+  {\it QPoint}: The Query Point that is the center of the query blob. It is a point on the context of the object.
+  \\
+  {\it OPoint}: The Object point is the point in surrounding of the Qpoint which is an object point in a positive sample.
  
  Instances of these elements are illustrated in Figure ~\ref{FEStructure.figure} for the example scene that we saw in Figure 
  ~\ref{TrashbinBounding.figure}. 
- The red point in the figure shows the $Query$ $Point$, which is a point picked from the context of the object and the features are extracted from the sphere surrounding it. The sphere is also visible in the figure which is the 
-$Query$ $blob$. 
- The yellow point is the $OPoint$ or object point which is a point on the annotated object. 
+ The red point in the figure shows the {\it Query Point}, which is a point picked from the context of the object and the features are extracted from the sphere surrounding it. The sphere is also visible in the figure which is the 
+{\it Query blob}. 
+ The yellow point is the {\it OPoint} or object point which is a point on the annotated object. 
  
  \begin{figure}[t]
   \centerpsw{FEStructure}{0.65\columnwidth}
@@ -689,6 +692,8 @@ negative ones.
 
 
 Figure ~\ref{DistanceOFPosandNegHist.figure} is showing the distance between random positive and negative samples.
+
+In the next chapter, the setup for the experiment is described and results are evaluated.
 
 
 % \section{Experimental Setup}

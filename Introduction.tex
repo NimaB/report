@@ -13,7 +13,7 @@ In other words, the strategy depends on the amount of information about the targ
 
 
 
-Torralba et al. in \cite{eyeMovement} pointed to the fact that many experiments are showing that the human visual system uses 
+{\it Torralba et al.} in \cite{eyeMovement} pointed to the fact that many experiments are showing that the human visual system uses 
 contextual information to facilitate a search for objects. They propose the use of context for object detection using 2D images.They take two parallel approaches to predict the image regions likely to be focused on by human observers, naturaly searching for objects in real world scenes;One computes local features (saliency) and the other computes global (scene-centered) features.
 %Although, it is also mentioned that how this information is applied in the process is not completely known to scientists yet.
 
@@ -86,22 +86,22 @@ Torralba et al. in \cite{TrollbaContexBased}, used a low dimensional global imag
 %      
      
      
-     Torralba in In \cite{TorralbaContextualPriming}, is considering a general representation of a whole scene in which an object is present, as its context (similar to the above). Context with their definition is proportional to the size of the object with respect to each scene (image). So if the object is taking a small percentage of the image, the context will be mainly its background, while in a focused image where most pixeles belong to the object, contextual information becomes interinsic image features.Then they compute a context-centered object likelyhood by modeling the relationship between contexualt features and object properties.As the result, regions of an image with higher probablity of contanining the object of interest gets marked.   
+     {\it Torralba} in In \cite{TorralbaContextualPriming}, is considering a general representation of a whole scene in which an object is present, as its context (similar to the above). Context with their definition is proportional to the size of the object with respect to each scene (image). So if the object is taking a small percentage of the image, the context will be mainly its background, while in a focused image where most pixeles belong to the object, contextual information becomes interinsic image features.Then they compute a context-centered object likelyhood by modeling the relationship between contexualt features and object properties.As the result, regions of an image with higher probablity of contanining the object of interest gets marked.   
      
      Perko and Leonardis in In \cite{PerkoLeonardisContextDriven} also proposed a method to focus attention on regions in an image (2D) where object of interest is more likely to be found. They showed performance of their approach for pedestrian detection in urban scenes, although the method said to be applicable to any object category and independent from task specific models. They concluded that context awareness provides benefits over pure local appearance-based processing and decreases search complexity while improving the robustness of object detection. 
      
-     Compared to $Torallba$ $et$ $al.$ they used different features and descriptors and also evaluated combining their contextual priming method with state-of-the-art object detectors. They used an additional contextual cue, the veiwpoint prior in addition to geometrical and texture features to estimate position of the horizon.Geometrical features capture probablity of each context point to belong to each of three classes of $Ground$, $Sky$ or $vertical$ (Buildings, trees, ...). 
+     Compared to \textit{Torallba et al.} they used different features and descriptors and also evaluated combining their contextual priming method with state-of-the-art object detectors. They used an additional contextual cue, the veiwpoint prior in addition to geometrical and texture features to estimate position of the horizon.Geometrical features capture probablity of each context point to belong to each of three classes of \textit{Ground}, \textit{Sky} or \textit{vertical} (Buildings, trees, ...). 
      
      For extracting contextual features, they consider a center for their object of interest then sample the features at 60 points around that object center (5 radii and 12 orientations). The obtained information is concentrated into one feature vector for that object center. They use linear SVM to train their model then convert the results into probablities of a pedestrian being present at a given pixel position. 
      
      Their data aquisition setup, specially for estimation of the viewpoint prior needs to be adjusted specifically based on the object category and application. 
      
      
-     Aydemir et al. in  \cite{aydemir2012_3Dcontext} argued that ``the placement of everyday objects is highly corelated to the 3D structure of an environment- as opposed to being correlated to the appearance of the environment''. So they belive in existance of a correlation between an object and its natrual context, due to the physical support and reachability that the context can structually offer. 
+     \textit{Aydemir et al.} in  \cite{aydemir2012_3Dcontext} argued that ``the placement of everyday objects is highly corelated to the 3D structure of an environment- as opposed to being correlated to the appearance of the environment''. So they belive in existance of a correlation between an object and its natrual context, due to the physical support and reachability that the context can structually offer. 
      
      They also train models for object context to focus the attention of object detectors to reduced search regions which match the learned models. They benefit from the recently availble RGB-D sensors to obtain 3D data and show how 3D context of objects can be a ``Strong indicator of object placement in everyday scenes''. They collected large dataset from five different locations (but all university indoor rooms and corridors) using Microsoft Kinect. They are modeling object context using geometrical features of a neighbourhood of annotated objects and trained a SVM, using weighthed feature responces collected from different parts of the neighbourhood. For capruting the geometry of they calculated histograms of surface normals on the 3D data corresponding to each selected region from an image.
      
-     Ayedemit et al.'s definition of context is close to the definition we used in our work but they used 2d images, plus depth information to model their context and do their evaluations, while we used full 3D reconstructed pointclouds of the scenes. Using the pointcloud allowed us to be able to collect features from the observed environment as it is without the need to focus on objects and its neighnourhood (Training and test sets are full Pointlcouds and not pruned and adjusted scenes. Similar to us, they noticed how much hight can be an informative factor for most object classes. 
+     \textit{Ayedemit et al.}'s definition of context is close to the definition we used in our work but they used 2d images, plus depth information to model their context and do their evaluations, while we used full 3D reconstructed pointclouds of the scenes. Using the pointcloud allowed us to be able to collect features from the observed environment as it is without the need to focus on objects and its neighnourhood (Training and test sets are full Pointlcouds and not pruned and adjusted scenes. Similar to us, they noticed how much hight can be an informative factor for most object classes. 
      
      In our approach, we defined a point of view for our feature collection which can mitigate the issue mentioned in \cite{aydemir2012_3Dcontext}, for larger objects. Our viewpoint provides a framework for the features to be collected from different point of veiws with respect to the object and makes it indifferent to the size or distance from the observer (camera). In \cite{TorralbaContextualPriming}, \cite{TrollbaContexBased} and \cite{PerkoLeonardisContextDriven}, objects that takes a small fraction of an image pixeles can get neglected, while in \cite{aydemir2012_3Dcontext}, the framework performs less effective for largers objects, due to the variance of observable background as a result of difference in the viewpoint. 
      
@@ -139,8 +139,8 @@ Torralba et al. in \cite{TrollbaContexBased}, used a low dimensional global imag
 \label{Contributions.sec}
 %----------------------------------------------------------------------------
 In this work, we use 3D pointclouds of different place categories and annotated objects in them as input to train 3D models of object context. Then these models are applied on test pointclods to determine which parts of the pointclod (i.e. the place) is most probable context for an object of interest. The object context is defined as surfaces in the vicinity of the object of interest. This includes surfaces the object is located on or next to and also other objects which can usually be found beside the object of interest. 
-For instance, if the object of interest is a $kitchen$ $water$ $tap$, it's context can be the 
-$kitchen$ $sink$ and the wall behind it. (Figure ~\ref{contextExample.figure})
+For instance, if the object of interest is a \textit{kitchen water tap}, it's context can be the 
+\textit{kitchen sink} and the wall behind it. (Figure ~\ref{contextExample.figure})
 
 \begin{figure}[t]
   \centerpsw{contextExample}{0.65\columnwidth}
@@ -230,8 +230,8 @@ perhaps not in other places.
 For instance a kitchen sink is such a discriminative object. 
 If the robot can find such an object in a place, it can obtain a good confidence about that place to be a kitchen. 
 
-{\bf\it Viswanathan et al.} in \cite{P.Viswanathan}, also  pointed to the fact that object detection is a good prior for place 
-categorization. {\bf\it T. Southey and J. J. Little} in \cite{southey2006object} argued that, {\it rooms} are defined by their geometric 
+{\it Viswanathan et al.} in \cite{P.Viswanathan}, also  pointed to the fact that object detection is a good prior for place 
+categorization. {\it T. Southey and J. J. Little} in \cite{southey2006object} argued that, {\it rooms} are defined by their geometric 
 properties, while definition of {\it places} is based on objects they contain and activities takes place in them.  
 
 On the other hand, the place classification system would be more robust if it is able to recognize the place, using object information, 

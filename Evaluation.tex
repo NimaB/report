@@ -100,7 +100,6 @@
 % In this data type 3D coordinates and color information of a point is saved in a record and then an array of these records forms 
 % the pointcloud.
 % 
-% TODO: define terms used in the report, like blob
 % \subsection{Object context descriptor}
 % \label{OCD.ssec}
 % 
@@ -653,7 +652,7 @@ include different object classes.
 
 
 To capture pointclouds we used different tools:
-RGBDSLAM \cite{RGBDSLAM} is an open source  package available in ROS. 
+{\it RGBDSLAM} \cite{RGBDSLAM} is an open source  package available in ROS. 
 Using this package and kinect sensor with OpenNi driver a 3D model of a scene can be captured. 
 The results are saved as pcd files.
 Pointclouds were captured from different types of places from KTH campus like offices, Kitchens and bathrooms including 
@@ -734,7 +733,7 @@ It also shows what fraction of those samples were positive samples that are actu
 \label{Objects.table}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-\multicolumn{2}{|c|}{Object} & \#Train samples & \#Positive Train samples & Ratio \\
+\multicolumn{2}{|c|}{Object} & \#Train samples & \#Positive Train samples & Ratio (\%) \\
 \hline
       1 & Trash Bin & 142150 & 2493 & 1.7 \\
 \hline
@@ -749,9 +748,8 @@ It also shows what fraction of those samples were positive samples that are actu
 \end{table}
 
 
-In experiments with four different object categories mentioned in table \ref{Objects.table} few different scenes are considered to capture train pointclouds from.
-For each scene, a number of different location settings for objects are captured in different point cloud (figures \ref{TrainClouds2.figure:tmt1} and \ref{TrainClouds2.figure:tmt2}).
-Therefore, in the resulting train set each object has a number of instances in different scenes.
+In experiments with four different object categories mentioned in table \ref{Objects.table}, a few different settings are considered, to make the train set more general. So instances are object are captured in different expected locations, hights, etc. Also other objects that can be in the scene together with the object of interest (which can be a part of their context) are considered in these different settings. Therefore, in the resulting train set each object has a number of instances in different scenes.
+(figures \ref{TrainClouds2.figure:tmt1} and \ref{TrainClouds2.figure:tmt2})
 
 \begin{figure} [htp]
    \begin{center}
@@ -761,37 +759,25 @@ Therefore, in the resulting train set each object has a number of instances in d
     \subfigure[A partial cloud including several instances of 3 object categories.]{\label{TrainClouds2.figure:tmt3}\includegraphics[width=2in,height=2in]{./Figures/518_4_labels}} \\
   \end{center}
   \caption[Train set pointclouds including four different object class.]
-  {Partial pointclouds including four object categories: trash bin(marked with blue circles), mouse(back circles), telephone(red circles) and wiper(green circles) in different location settings used in training.(best viewed in color)}
+  {Partial pointclouds including four object categories: Trash bin(marked with blue circles), mouse(back circles), telephone(red circles) and wiper(green circles) in different location settings used in training.(Best viewed in color)}
   \label{TrainClouds2.figure:edge}
 \end{figure}
 
 
 
 
-After acquiring the pointclouds, some scripts were used that picks the pointcloud from the input dataset 
-and load them into PreProcess module and saves the results of each pointcloud separately in a useful way into the automatically
-generated environment. 
-Then the annotation tool were used to annotate objects of interest in the pointclouds. 
-All pointclouds were annotated with present objects of interest, regardless of them being in the train set or validation to 
-make evaluation possible on ones used for test as well. 
-Although in validation we would not be using labels from annotation until the end of classification, 
-this information is needed for evaluation which would be described later in next Section ~\ref{Results.sec}.
+The aquired pointclouds then are taken through an automated workflow (python scripts) that picks a pointcloud from the input dataset, loads it into PreProcess module. Then the preprocessed pointclouds get annotated (labeling points belonging to objects of interest) in the Annotation tool.
+Some of the annotated pointclouds are used for training and some for validation. 
+For the ones used in validation labels from annotation do not get used until the end of classification, this information is needed for evaluation which would be described in the next Section (~\ref{Results.sec}).
 
 
-In the next step, another script picks annotated clouds and their normals (estimated in PreProcess) into Feature extract 
-and  resulting feature vectors are saved in a folder for the corresponding object class under train or validation set, regarding
-which set their source pointcloud belong to.
-Then, a subset is randomly selected from the train samples in a way that includes all the positive samples and sevral times more of 
- negative samples to make the train set.
-In first experiments for Trash bin we have used train sets with 10 percent positive and 90 percent negative samples.
-In later experiments and for other objects train sets are generated with all extracted positive samples and two times more of negative samples.
-In these experiments positive sample have a 33\% share in the train set.
+In the next step, the annotated clouds and their normals (estimated in PreProcess) get loaded into Feature extract module 
+and the resulting feature vectors are saved in a folder for the corresponding object class, under train or validation set, based on the set their source pointcloud belonged to.
+Then, a subset is randomly selected from the train samples to make the train set. As mentioned before, the destribution of positive and negative samples is significantly havier for the negative ones. In first experiments for Trash bin we have used train sets with 10 percent positive and 90 percent negative samples.In later experiments and for other objects train sets are generated with all extracted positive samples and two times more of negative samples.In these experiments positive sample have a 33\% share in the train set. At this point, all data sets are scaled with the same parameters, then the scaled train set is given to SVM train to make the models for each of the object class's context. 
 
-At this point, all data sets are scaled with the same parameters, then the scaled train set is given to SVM train 
-to make the models for each of the object class's context. 
+
 During training, different values for the parameters are considered, and each resulting model is applied on samples from validation
-set. 
-Classification results with different examined values of these parameters are compared and best models are selected. 
+set. Classification results with different examined values of these parameters are compared and best models are selected. 
 The results and evaluation procedure are discussed in Section ~\ref{Results.sec}.
 
 \section{Results}
@@ -806,16 +792,16 @@ In this section, we take a look at some results and analyze and evaluate them to
 %from a neighborhood of an annotated object while they have very similar features to positive samples. 
 %Such samples need to be predicted as positive. 
 
-Here we define the metric and evaluation method that we considered in this work.
-Metrics such as accuracy or prediction is not something that can show the performance of our system.
+Here we define a specifc metric and evaluation method that we proposed and considered in this work.
+Metrics such as accuracy of prediction, with their regular definition, are not the best ways to evaluate the performance of our system.
 Accuracy is measuring number of samples that are correctly classified with respect to the total number of samples.
-Here we do not have direct access to the number of correct classification. 
+since the expected result is a correct likelihood map of the object context and not the object itself, we do not have direct access to the number of correct classification (The annotation labeled the object and not its context). 
 
-Based on the problem definition, we are looking for possible context of an object, which regards to the locations that an 
-object is expected to be found, not just location that an object is present in.
-Intuitively, set of points that belong to an actual object (if there is an actual object in the scene) is a subset of all 
-possible object points in that scene.
-Therefore, actual object points ($Lp$) are a subset of predicted positive points ($Pp$) if the model and classifier perform 
+Based on the problem definition, we are looking for possible context of an object, which is the regions in a scene where the 
+object is expected to be found, not just regions where an instance of the object is actualy present. A table is a potential context for a cup, regardless of a cup being on it or not.   
+Intuitively, a set of points that belong to an actual object (if there is an actual object in the scene) is a subset of all 
+potentially candidate points for the object class, in that scene.
+Therefore, actual object points or labeled points ($Lp$) are a subset of the predicted positive points ($Pp$) if the model and classifier perform 
 well (equation \ref{Lp-PpRelation.eq}).
 
 \begin{equation}
@@ -823,27 +809,22 @@ well (equation \ref{Lp-PpRelation.eq}).
  Lp \subset Pp
 \end{equation}
 
-In other words, from a good result, we expect any random point sampling which is an actual object point to be within 
-predicted positive points.
-Similar metric is used in recently published and praised work \cite{aydemir2012_3Dcontext}.
+In other words, from a good result, if we randomly pick a point which belongs to an actual inastance of the object of interest, that point should be within the predicted positive points. A similar metric is used in the recently published and praised work \cite{aydemir2012_3Dcontext}.
 %if the predictions give us points of the pointcloud where there is a high probability of finding the object, it
 %would be what we want. 
 %The point here is, that the location of the object would be a subset of this predicted set. 
-With this definition there would be a problem: if all points get predicted as positive then actual object points would 
+With this definition there would be a problem: If all points get predicted as positive then actual object points would 
 definitely be a subset of it, while our classification has failed.
-As a result, we define a good result as predicted set of locations that reduces our search space for the object as much as 
-possible while it preserves the high probability of finding the object.
+To addres this issue, we define a good result as \textbf {predicted set of locations that reduces our search space for the object as much as 
+possible while it preserves the high probability of finding the object}.
 
 Equation ~\ref{Eval.eq} shows the evaluation metric, where $E(\tau)$ is the the value of the metric with respect to a 
 probability threshold $\tau$. 
-This threshold sets the boundary for the lowest probability value that the prediction for a point should have to be 
+This threshold sets the boundary for the lowest probability value that the prediction for a point should have, to be 
 considered as positive. 
 %This threshold is assigned with a value in a loop that as a result in each iteration a top fraction of the samples are being 
 %picked and analyzed. 
-The threshold is computed based on an increasing number of considered points.
-For instance, the threshold takes a value that separates the top five percent of the points with respect to their prediction 
-value.
-Then, the probability of having the object in this fraction of points is computed.
+The threshold is computed through a tuning process where its value gets changed in a loop and for each threshold value,the probability of having the labled object within the positive predictions calculated. The optimal result would be a value for the threshold which results smallest subset of the pointcloud predicted as positive, while the chance of finding the object in the predicted region stays \%100. For instance, the threshold takes a value that separates the top five percent of the points with respect to their prediction value. Then, the probability of having the object in this fraction of points is computed.
 
 
 $Pp_{\tau}$ is predicted positive sample with respect to the value of the threshold and $n(x)$ is the number of 
@@ -858,7 +839,7 @@ labeled positive points in the data-set or in other word the annotated object.
 This value is between zero and one, and a value closer to one, while the threshold is high enough, shows a better result.
 This metric is also used in experiments to find the best models and parameters. 
 Here we also translate the sample base results into point base which means the result is assigned to the point for which 
-the sample is taken.
+the features are taken.
 %Therefore, the prediction directly shows if a candidate OPoint is a possible object point or not.
 
 %Figure ~\ref{Eval80ExperimentTop10.figure} shows the value of $E$ for top ten percent of the points with respect to their 
@@ -914,7 +895,7 @@ trash bin or put one (based on the train data).
 \end{figure}
 
 In later experiments that we used multi kernel of type chi-square, there was a significant improvement on the results.
-As the first two fields of our feature vector are two float values and the rest is histogram, they are to be treaded 
+As the first two fields of our feature vector are two float values and the rest is histogram, they are to be treated 
 in different ways.
 So we separated the kernels applied on each of these parts.
 The visualized results of predictions using these kernels with equal weights are shown in Figure ~\ref{ContextPrediction_518_1.figure:edge} 
@@ -951,8 +932,7 @@ results.
   \end{center}
 \end{figure}
 
-To compare the performance of the system regarding each of these four object class, the values of $E$ in a certain 
-ratio of selected points with respect to all points in the pointcloud is considered for each of these object classes.
+To compare the performance of the system regarding each of these four object class, the values of $E$ corresponding to each selected threshold (resulting in, a certain ratio of selected points with respect to all points in the pointcloud) is considered for each of these object classes.
 Table ~\ref{performance.table} contains these values for the ratio of top 5\%.
 
 \begin{table}
@@ -979,11 +959,11 @@ Object & E in top 5\% of points & The ratio that E reaches to 1 \\
 As it can be seen in table ~\ref{performance.table}, the best performance of the system is for Telephone and after 
 that for Mouse.
 These two are often found in a similar context which can be a good reason for these results.
-The context for trash bin, at least based on our train set, can have wider variety compared to mouse and telephone.
+The context for trash bin, at least based on our train sets, can have wider variety compared to mouse and telephone.
 That is why its performance value is the lowest.
 
-But for wiper, as the context is usually similar it can not be a good explanation.
-In the wiper case, the reason for its low performance should be the wide range of heights this object can be located in.
+
+In the wiper case, the reason for its low performance should be the wide range of heights this object can be located in. It can also be placed on a table.
 We consider the height as an important feature in building our models which makes it very effective.
 The effectiveness of height seems to be not so useful in the case of wiper.
 A solution can be using smaller weights for the height feature in modeling these object classes.

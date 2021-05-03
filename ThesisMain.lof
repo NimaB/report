@@ -38,11 +38,11 @@
 \contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Predicted context for Telephone.}}}{33}{figure.3.6}%
 \contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Predicted context for Trash Bin.}}}{33}{figure.3.6}%
 \contentsline {figure}{\numberline {3.7}{\ignorespaces Evaluation results for four object classes.}}{34}{figure.3.7}%
-\contentsline {figure}{\numberline {3.8}{\ignorespaces Visualization of context model prediction on sample cloud 2 as a test cloud.}}{36}{figure.3.8}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Predicted context for Mouse.}}}{36}{figure.3.8}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Predicted context for white-board wiper.}}}{36}{figure.3.8}%
-\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Predicted context for Telephone.}}}{36}{figure.3.8}%
-\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Predicted context for Trash Bin.}}}{36}{figure.3.8}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Visualization of context model prediction on sample cloud 2 as a test cloud.}}{35}{figure.3.8}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Predicted context for Mouse.}}}{35}{figure.3.8}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Predicted context for white-board wiper.}}}{35}{figure.3.8}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Predicted context for Telephone.}}}{35}{figure.3.8}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Predicted context for Trash Bin.}}}{35}{figure.3.8}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Overview of a semantic mapping system}}{40}{figure.4.1}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Probabilistic graphical model of place-object.}}{42}{figure.4.2}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Overview of a semantic mapping system}}{38}{figure.4.1}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Probabilistic graphical model of place-object.}}{40}{figure.4.2}%
