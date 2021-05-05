@@ -37,6 +37,11 @@ Chih-Chung Chang and Chih-Jen Lin.
 \newblock In {\em "Proc. of the RGB-D Workshop on 3D Perception in Robotics at
   the European Robotics Forum"}, "Vasteras, Sweden", "April" "2011".
 
+\bibitem{eigenweb}
+Ga\"{e}l Guennebaud, Beno\^{i}t Jacob, et~al.
+\newblock Eigen v3.
+\newblock \url{http://eigen.tuxfamily.org}, 2010.
+
 \bibitem{1641019}
 S.~Lazebnik, C.~Schmid, and J.~Ponce.
 \newblock Beyond bags of features: Spatial pyramid matching for recognizing

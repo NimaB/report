@@ -117,19 +117,17 @@ Here are some terms that are used through the rest of the text:\\
 \subsection{Object context descriptor}
 \label{OCD.ssec}
  
-The feature descriptor we proposed in this work, consists of the following elements:
-
-local surface orientation:
+The feature descriptor we proposed in this work, consists of the following elements:\\
+\\
+{\bf local surface orientation}:\\
 This element captures a rough estimation of query surface orientation with respect to the vector of gravity.This feature is computed by estimating the angle between average normal of the surface and the gravity vector. We consider a unit vector along the z axis in the world coordinate system as the gravity vector. It is noticeable that the position and orientation of the camera with respect to this coordinate system is known and used as
-the ground truth.
-
-
-Local surface height:
-This element is the average height of the query surface from which the features are extracted with respect to the floor. The floor is assumed to have the lowest height or vertical position in the pointcloud.
- 
-
-Viewpoint Feature Histogram:
-This element of the feature vector is a histogram that encodes the geometry of the blob with respect to a specific view point. We found this descriptior very useful for encoding geometry of surfaces in pointclouds, with respect to specific viewpoints. The innovative way we took advantage of this powerful descriptor helped us to encode the geomentry of surfaces from several different points of view to make our context model independent from the viewpoint. As it was mentioned in \ref{RelatedWork.sec}, being dependant to the viewpoint was a challenge in \cite{aydemir2012_3Dcontext}.
+the ground truth to transform pointcloud from Camera coordinate system.\\
+\\
+{\bf Local surface height}:\\
+This element is the average height of the query surface from which the features are extracted with respect to the floor. The floor is assumed to have the lowest height or vertical position in the pointcloud.\\
+\\
+{\bf Viewpoint Feature Histogram}:\\
+This element of the feature vector is a histogram that encodes the geometry of the blob with respect to a specific view point. We found this descriptior very useful for encoding geometry of surfaces in pointclouds, with respect to specific viewpoints. The innovative way we took advantage of this powerful descriptor, helped us to encode the geomentry of surfaces from several different points of view to make our context model independent from the viewpoint. As it was mentioned in \ref{RelatedWork.sec}, being dependant to the viewpoint was a challenge in \cite{aydemir2012_3Dcontext}.
 This descriptor is called VFH (~\cite{5651280}) which is explained more in the following subsection. \footnote{The images and definitions are taken from Point Cloud's official website.}
 
 \subsubsection*{The Viewpoint Feature Histogram (VFH)}
@@ -271,30 +269,42 @@ Field number & Content\\
 % Libraries
 % \subsection*{Used Libraries in Implementation}
 % 
-% Most of the implementation is done in C++. 
-% There are some scripts for evaluation part of the results and creating the dataset for experiments written in MATLAB and also 
-% scripts creating the experiments and the experimental environment are in python. 
-% Libraries used in this work are as follow:
 % 
-% \begin{itemize}
-%  \item PCL \cite{Rusu_ICRA2011_PCL}
-%  \item Eigen \cite{eigenweb}
-%  \item LIBSVM \cite{LIBSVM}
-% \end{itemize}
 
 
-\subsection{System Modules}
-As illustrated in Figure ~\ref{SystemOverview.figure}, apart from SVM (\cite{LIBSVM} and 
-\cite{li2010holistic}), there are three modules in the system:
+\section{Implementation}
+
+The main implementation is done with C++ and some availble libraries are also used in the code which are listed below.   
+
+\begin{itemize}
+ \item {\it PCL} \cite{Rusu_ICRA2011_PCL}
+ \item {\it Eigen} \cite{eigenweb}
+ \item {\it LIBSVM} \cite{LIBSVM} \& \cite{li2010holistic}
+\end{itemize}
+
+Besides the main code some scripts are written for results evaluation and creating the datasets for experiments in MATLAB and also 
+scripts creating the experiments and the experimental environment are in python.\\
+\\
+As illustrated in Figure ~\ref{SystemOverview.figure}, there are five modules in the system:
 
 \begin{itemize}
   \item PreProcess
   \item Annotation
   \item FeatureExtract
+  \item Learning
+  \item Result visualization
 \end{itemize}
 
-\subsubsection{PreProcess}
+\subsection{PreProcess}
 \label{PreProcess.ssec}
+
+\begin{figure}[t]
+  \centerpsw{PreProcess}{0.9\columnwidth}
+  \caption[PreProcess overview]
+  {An overview of the PreProcess}
+  \label{PreProcess.figure}
+\end{figure}
+
  In this module, the input pointclouds get prepared for annotation and feature extraction. 
  %The pointclouds we used in this work are saved in "PCD" format and their point type is PointXYZRGB which is PCL point type. 
  The processes for capturing these pointclouds is discussed in Section ~\ref{ExperimentalSetup.sec}. 
@@ -359,8 +369,17 @@ result.
 
  
  
-\subsubsection{Annotation}
+\subsection{Annotation}
 \label{Annotation.ssec}
+
+% begin{figure}[t]
+%   \centerpsw{PreProcess}{0.9\columnwidth}
+%   \caption[Annotation overview]
+%   {An overview of the Annotation}
+%   \label{Annotation.figure}
+% \end{figure}
+
+
 In this module the transformed and converted version of the pointcloud is loaded to get annotated. 
 The objects needed to be annotated in the scene, are selected by clicking roughly on their center. 
 The labels of the points belonging to them are assigned with a value representing object points. 
@@ -425,8 +444,17 @@ We have pubilshed this package with its source in Github to be used by other res
 
 % Feature extraction
 
-\subsubsection{FeatureExtract}
+\subsection{FeatureExtract}
 \label{FeatureExtract.ssec}
+
+% begin{figure}[t]
+%   \centerpsw{PreProcess}{0.9\columnwidth}
+%   \caption[PreProcess overview]
+%   {An overview of the PreProcess}
+%   \label{FeatureExtract.figure}
+% \end{figure}
+
+
 First, we Introduce some terms used in this part. They are as follows:
 \\
 %   \item Blob: A sub set of the Point-cloud which includes a number of points in a neighborhood within a specific radius.
@@ -544,8 +572,15 @@ The values mentioned in the figure is for an example object class.
 \end{algorithm}
 % Learning
 
-\subsubsection{Learning}
+\subsection{Learning}
 \label{Learning.ssec}
+
+% begin{figure}[t]
+%   \centerpsw{PreProcess}{0.9\columnwidth}
+%   \caption[PreProcess overview]
+%   {An overview of the PreProcess}
+%   \label{Learning.figure}
+% \end{figure}
 
 %learning is done using libsvm
 After Feature extraction, the resulting data set for train is made in a way that it includes samples from several pointclouds 
@@ -578,6 +613,17 @@ It can be inferred that there should be a big weight for positive class and rath
 In Section ~\ref{ExperimentalSetup.sec} a parameter selection procedure used to find suitable values for them is discussed.      
 
 The way datasets and experimental environment is created is discussed in Section ~\ref{ExperimentalSetup.sec}.
+
+
+\subsection{Visualization}
+\label{visualization.ssec}
+
+% begin{figure}[t]
+%   \centerpsw{PreProcess}{0.9\columnwidth}
+%   \caption[PreProcess overview]
+%   {An overview of the PreProcess}
+%   \label{Visualization.figure}
+% \end{figure}
 
 
 % parameters
@@ -619,7 +665,7 @@ expect from the classifier.
 \end{itemize}
 
 
-\subsection{Qualitative study of samples}
+\section{Qualitative study of samples}
 \label{QStudy.ssec}
 
 It can help if we first check some plots showing how does some random samples look like and how discriminative the feature vector 
@@ -693,6 +739,15 @@ negative ones.
 
 Figure ~\ref{DistanceOFPosandNegHist.figure} is showing the distance between random positive and negative samples.
 
+
+\begin{figure}[t]
+  \centerpsw{DetailedOverview}{1.1\columnwidth}
+  \caption[Detailed Overview of the system]
+  {Detailed Overview of the system.}
+  \label{DetailedOverview.figure}
+\end{figure}
+
+Figure ~\ref{DetailedOverview.figure} shows the whole workflow of the systems with more details comparing to the block diagram in ~\ref{SystemOverview.figure}.
 In the next chapter, the setup for the experiment is described and results are evaluated.
 
 
