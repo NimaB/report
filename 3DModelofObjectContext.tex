@@ -110,7 +110,34 @@ Here are some terms that are used through the rest of the text:\\
 \\
 \textbf{\textit{Query blob}}: The blub from which we are extracting the features.\\
 \\
+\textbf{\textit{QPoint}}: The Query Point that is the center of the query blob.\\
+\\
+\textbf{\textit{Keypoint}}: All points in downsampled version of an input pointcloud is called {\it Keypoint}. QPoints are selected from keypoints in {\it FeatureExtract} module.\\
+\\
+\textbf{\textit{OPoint}}: The Object point; is a point in vicinity of the Qpoint which is a candidate to be an object point in a positive sample.\\
+\\
+\textbf{\textit{B-Radius}}: Radius of the sphere around {\it QPoint}. Points that are included in this sphere make the {\it Query blob}.\\
+\\
+\textbf{\textit{S-Radius}}: Search Radius; is the radius around the {\it QPoint}, within which candidate {\it OPoints} are considered.\\
+\\
+\textbf{\textit{OPoint-Radius}}: To extract samples from an annotated pointcloud to make a train dataset, for each considered {\it OPoint}, the algorithm look for labeled object point within a small vicinity around it. The radius for this search vicinity is called {\it OPoint-Radius}. If the considered {\it OPoint} is located on an annotated object, there should be a labeled object point very close to it.\\ 
+\\
 \textbf{\textit{TFP pointcloud}}: Template Full Point pointcloud, is an artificially generated set of point coordinates in the pointcloud format (3D Matrix of points) to be used as candidate viewpoints. It makes a dense cubical pointcloud where its density is based on the selected voxel size. The dimention of TFP pointcloud gets set in a way that it can cover the entire pointloud from which we want to extract features (for train or test).\\
+\\
+\textbf{\textit{Voxel-Radius}}: Size of the voxel in TFP pointcloud is determined by this parameter. its the distance between adjacent points in each dimention.\\
+\\
+\textbf{\textit{Search blob}}: A subset of {\it TFP pointcloud} within {\it S-Radius} of a {\it QPoint}. 
+\\
+
+See figure \ref{FEStructure.figure} and \ref{PointParameters_Diagram.figure}.
+
+\begin{figure}[t]
+  \centerpsw{FEStructure2}{0.9\columnwidth}
+  \caption[Illustration of the items used in Feature Extract.]
+  {Structure used in Feature extraction; The red point is the QPoint; The sphere surrounding it, is the Query Blob; The yellow
+  points are some of the OPoint (Best viewed in color).}
+  \label{FEStructure.figure}
+\end{figure}
 
 
 
@@ -302,35 +329,28 @@ As illustrated in Figure ~\ref{SystemOverview.figure}, there are five modules in
   \centerpsw{PreProcess}{0.9\columnwidth}
   \caption[PreProcess overview]
   {An overview of the PreProcess}
-  \label{PreProcess.figure}
+  \label{PreProcessFlowchart.figure}
 \end{figure}
 
- In this module, the input pointclouds get prepared for annotation and feature extraction. 
+ In this module, the input pointclouds get prepared for annotation and feature extraction (see Figure \ref{PreProcessFlowchart.figure}).
  %The pointclouds we used in this work are saved in "PCD" format and their point type is PointXYZRGB which is PCL point type. 
  The processes for capturing these pointclouds is discussed in Section ~\ref{ExperimentalSetup.sec}. 
- First step in preparation of the input is transforming it.
- Based on the location and orientation of the sensor in time $t_0$ the resulting point cloud is transformed from 
- sensor coordinate system to the world's coordinate system.
- The sensor is in a fixed orientation and vertical position in time the first frame is captured for all pointclouds 
- used in experiments of this work.
  
- As a different PCL point type, in which labels can be saved for each point, is used in the rest of the process, 
- in this step a conversion of the transformed pointcloud into that type  is also carried out.
  
- %This new point type is PointXYZRGBL which includes a field in each point for label which is used later in annotation 
-% tool and also in feature extract to decide about the class of the sample in train data set. 
- The most important step, which is taken here is estimation of surface normals which is essential for feature extraction. 
- The accuracy of the VFH feature is directly dependent to the accuracy of the normals. 
- %At first we were doing this process in feature extract module and for each query blob at the moment which added a huge overhead to
- %the process while it could be done independently and once for each point cloud. 
- Here the normals for the whole pointcloud are estimated once and saved in a separate pcd file to be used in 
- feature extract. 
- %It uses NormalEstimation class in PCL.
+ To make all of our calculations consistent and more straight forward, as the first step we transform the captured pointclouds from the camera coordinate system to worlds's coordinate system.Based on the position and orientation of the sensor in time $t_0$ the transformation is done, using the availble functions in {\it PCL}.  
+ \footnote{Sensor is in a fixed orientation and vertical position in time the first frame is captured for all pointclouds 
+ used in experiments of this work.}
+ 
+ 
+ The most important step in Preprocess,is estimation of surface normals which is essential for feature extraction. %The accuracy of the VFH feature is directly dependent to the accuracy of the normals. 
+ We started with estimating surface normal from each query blob in feature extract module. But later we moved to to the preprocess module and estimated the normals for the entire pointcloud once and saved in a PCD file to be used whenever needed. During feature extract, estimated normal can be loaded from the file and get used to compute features for each query blob. Normals are estimated for each point, using {\it NormalEstimation} class in {\it PCL} which uses PCA method on the covariance matrix of the points.
+ 
+ 
+ In order to make it easier to classify points, we defined a new point type by adding a filed to the original point type ({\it XYZRGB}). This filed is used for labling each point as {\it object point}, {\it Context point} or {\it others}. The new point type is in {\it XYZRGBL} format, where L is the label field. In case we are modeling contexts for multiple classes of objects, the label can encode all different classes into the points in the pointlocud, at the same time. In this step the conversion of the transformed pointcloud (in world coordinated system) into XYZRGBL point type is also carried out.
+ 
  
  There is also one more product for this module, which is discussed more in ~\ref{FeatureExtract.ssec}.
- It is a generated cube-shaped pointcloud with length, width and height of the input cloud, filled with points.
- The density of these points is determined by a fixed radial distance between them.
- It is used as a source for picking viewpoints that are needed in feature extraction.
+ It is a generated cube-shaped pointcloud with length, width and height of the input cloud, filled with points. To get the required dimention for this grid pointcloud, we use 3DMINMAX function from {\it PCL}. The density of these points is determined by a fixed radial distance between them. It is used as a source for picking viewpoints that are needed in feature extraction.
  
  Therefore, the results of this module are as follows:
  \begin{itemize}
@@ -346,8 +366,7 @@ As illustrated in Figure ~\ref{SystemOverview.figure}, there are five modules in
 \REQUIRE Sensor Location and orientation.
 \medskip
 
-\STATE Transform the input cloud, based on the Sensor location and orientation from the camera coordinate system to the world coordinate system, and store the 
-result.
+\STATE Transform the input cloud, based on the Sensor position and orientation from the camera coordinate system to the world coordinate system, and store the result in pointcloud\_Transformed.
 \STATE Estimate Normals and store.
 \STATE Convert the Pointcloud\_Transformed to Point type XYZRGBL and store in Pointcloud\_Converted.
 \STATE Estimate 3DMINMAX of the Pointcloud\_Converted.
@@ -372,18 +391,17 @@ result.
 \subsection{Annotation}
 \label{Annotation.ssec}
 
-% begin{figure}[t]
-%   \centerpsw{PreProcess}{0.9\columnwidth}
-%   \caption[Annotation overview]
-%   {An overview of the Annotation}
-%   \label{Annotation.figure}
-% \end{figure}
+\begin{figure}[t]
+  \centerpsw{AnnotationFlowchart}{0.9\columnwidth}
+  \caption[Annotation overview]
+  {An overview of the Annotation}
+  \label{AnnotationFlowchart.figure}
+\end{figure}
 
 
-In this module the transformed and converted version of the pointcloud is loaded to get annotated. 
-The objects needed to be annotated in the scene, are selected by clicking roughly on their center. 
-The labels of the points belonging to them are assigned with a value representing object points. 
-Objects from different classes could be labeled with different values (\ref{Annotation.algorithm}).
+In this module the transformed and converted version of the pointcloud is loaded and visualized, so that objects of interest can be annotated in it.(see Figure \ref{AnnotationFlowchart.figure}) The visualization is in 3D and the user can easily manipulte the pointcloud (rotate, zoom in and out, move ...) to find the object and select them. 
+The objects in the scene can be selected by clicking roughly on their centeroid. Once the centeriod is selected, the points that are most likely belonging to the same object (within a defined vicinity, closer to each other, compared to points from other adjacent surfaces) get separated and labeled as the points belonging to the object of interest. Labeling the points mean assigning the label field (of each of the points) to a value representing a particular object class. 
+Objects from different classes get labeled with different values (\ref{Annotation.algorithm}).
 
 \begin{algorithm}[t]
 \begin{algorithmic}[1]
@@ -393,8 +411,8 @@ Objects from different classes could be labeled with different values (\ref{Anno
 
 \STATE Visualize input cloud.
 \FORALL{objects to be annotated}
-  \STATE Run Point picking procedure.
-  \STATE Extract neighbor points indexes with respect to the input object radius.
+  \STATE Run Point picking procedure, to get the centeroid of an object.
+  \STATE Extract closes neighbor points indexes with respect to the input object radius, from vicinity of the picked centeriod.
   \STATE Label points whose indexes are extracted in previous step.
 \ENDFOR
 \STATE Store the pointcloud with the labels in output cloud.
@@ -408,18 +426,11 @@ Objects from different classes could be labeled with different values (\ref{Anno
 \end{algorithm}
 
 
-Figure ~\ref{TrashbinBounding.figure}, shows a scene in an office at Royal Institute of Technology(KTH). 
-The object of interest here is the trash bin, which is marked by a green bounding box. 
-This figure is an image of the scene whose pointcloud is available in our dataset and the annotation is done on 
-the pointcloud.In Figure ~\ref{Annotation.figure} the annotated object could be seen in red within the scene's pointcloud.
+Figure ~\ref{TrashbinBounding.figure}, shows a scene in an office at {\it Royal Institute of Technology(KTH)}. The object of interest here is the trash bin, which is marked by a green bounding box. This figure is an image of the scene whose pointcloud is available in our dataset and the annotation is done on the pointcloud.In Figure ~\ref{Annotation.figure} the annotated object could be seen in red within the scene's pointcloud.
 
 
-It can be seen that some part of the floor is also colored in red, which means that part of the floor is also 
-annotated as the object.The reason is that the object's radius given to annotation tool was not accurate enough or the center of the 
-object was not picked accurately.But it does not harm the result and this much of accuracy is more than enough.
-In similar works, annotation is done using bounding box (2D or 3D) that considers a box with a certain dimention around the object. The content of that box approximates object points while other points which do not belong to the object itself, are included as well.
-Here, we exactly separate the points of the object by benefiting from the 3D coordinates of the points in the 
-pointcloud.
+It can be seen that some parts of the floor is also colored in red, which means that part of the floor is also annotated as the object.The reason is that the object's radius given to annotation tool was not accurate enough or the center of the object was not picked accurately. But it does not harm the result and this much of accuracy is more than enough. In similar works, annotation is done using bounding box (2D or 3D) that considers a box with a certain dimention around the object. The content of that box approximates object points while other points which do not belong to the object itself, are included as well. Here, we exactly separate the points of the object by benefiting from the 3D coordinates of the points in the 
+pointcloud, so the annotation is more accurate in comparision.
 
 
 As it is described in the algorithm ~\ref{Annotation.algorithm}, object segmentation is done automatically in a very 
@@ -442,92 +453,70 @@ rest of the pointclouds.
 
 We have pubilshed this package with its source in Github to be used by other researchers and improved by other developers.\cite{AnnotationGithub}
 
+
+%-----------------------------------------------------------------------------------------------------------------------------
 % Feature extraction
 
 \subsection{FeatureExtract}
 \label{FeatureExtract.ssec}
 
-% begin{figure}[t]
-%   \centerpsw{PreProcess}{0.9\columnwidth}
-%   \caption[PreProcess overview]
-%   {An overview of the PreProcess}
-%   \label{FeatureExtract.figure}
-% \end{figure}
-
-
-First, we Introduce some terms used in this part. They are as follows:
-\\
-%   \item Blob: A sub set of the Point-cloud which includes a number of points in a neighborhood within a specific radius.
-%   \item Query Blob: The blob from which the features are being extracted.
-  {\it QPoint}: The Query Point that is the center of the query blob. It is a point on the context of the object.
-  \\
-  {\it OPoint}: The Object point is the point in surrounding of the Qpoint which is an object point in a positive sample.
- 
- Instances of these elements are illustrated in Figure ~\ref{FEStructure.figure} for the example scene that we saw in Figure 
- ~\ref{TrashbinBounding.figure}. 
- The red point in the figure shows the {\it Query Point}, which is a point picked from the context of the object and the features are extracted from the sphere surrounding it. The sphere is also visible in the figure which is the 
-{\it Query blob}. 
- The yellow point is the {\it OPoint} or object point which is a point on the annotated object. 
- 
- \begin{figure}[t]
-  \centerpsw{FEStructure}{0.65\columnwidth}
-  \caption[Illustration of the items used in Feature Extract.]
-  {Structure used in Feature extraction; The red point is the QPoint; The sphere surrounding it, is the Query Blob; The yellow
-  point is the OPoint (Best viewed in color).}
-  \label{FEStructure.figure}
+\begin{figure}[t]
+  \centerpsw{FeatureExtract}{0.9\columnwidth}
+  \caption[FeatureExtract overview]
+  {An overview of the FeatureExtract process}
+  \label{FeatureExtractFlowchart.figure}
 \end{figure}
- 
-In this module, the converted and transformed pointcloud and its normals are loaded.
-To build the data set for train or test, Features are extracted for a number of keypoints from all over 
-the pointcloud.
-Keypoint selection is described later in this section.
 
-The goal here is to get samples which are useful in building the context model for objects of interest. 
-This is done in a way that for each key point, which is considered as a QPoint when it is selected for feature extract, 
-we take a neighborhood of points and their corresponding point-normals to extract features from (Query Blob). 
+
+A feature vector, as described in \ref{OCD.ssec}, gets extracted for several pairs of ($QPoint$,$OPoint$) from the entire input pointcloud. 
+Figure ~\ref{FEStructure.figure} shows an example for {\it QPoint}, {\it Query blob} and {\it Opoint} for the scene, we saw in Figure 
+ ~\ref{TrashbinBounding.figure}. The red point in the figure shows the {\it Query Point}, which is a point from the downsampled version of the same pointcloud. The sphere shown around the {\it QPoint} is the {\it Query blob}. The yellow point is the {\it OPoint} or candidate object point which in this example is siting on the annotated object (Trash bin), therefore its an object point. In this Figure only some of the {\it OPoints}, with respect to the shown {\it QPoint} are depicted, just to clarify the structure. 
+ 
+ 
+ These {\it OPoints}, that are coming from the overlaped TFP pointcloud, are uniformly distributed in 3D. Feature extract picks the ones that are within the {\it S-Radius}, in a loop to obtain feature response. In this section, feature extract is explained in detail.(See Figure \ref{FeatureExtractFlowchart.figure})Figure ~\ref{PointParameters_Diagram.figure} shows points and their related parameters. 
+The values mentioned in the figure is for an example object class.
+ 
+ 
+{\it FeatureExtract} module, browses through all surfaces and points in an input pointcloud and extracts feature responses from all regions. As mentioned before, our descriptor encodes hight, pose and the 3D geometry of the surfaces in a {\it Query blob} with respect to several viewpoints ({\it OPoint}). Therefore, we could consider every single point of the pointcloud as {\it QPoint} and extract the feature response from the {\it Query blob} around it. But this way, since the feature response is computed for the blob in the neighbouhood of the {\it QPoint}, the process takes a long time and studies each regions several times, redundantly. {\footnote For every point in each region, features are extracted from blobs which largly overlap with each other, therefore their feature response are very similar} 
+
+
+To make the process more effitient, first the pointcloud gets downsampled and the {\it QPoints} are selected from the downsampled pointcloud, while the {\it Query Blob} comes from the original one. This way, we make sure all regions of the pointcloud get encoded with the least redundancy. Downsampling is done based on a voxel size which this module recieves as input. This voxel size together with the {\it B-Radius}, determine the effitiency and accuracy of the pointlcoud sampling. As described in \ref{Parameters.ssec}, these parameters are selected based on experiment and crossvalidations done for the selected object classes. 
+
+
+So the input pointcloud which is preprocessed (Transformed and converted to XYZRGBL) and its downsampled version are used to obtain {\it Query blobs} and {\it QPoints}. The surface normals for every points in the pointcloud is also availble from the {\it PreProcess}, which gets loaded from its PCD file. To build the data set for train or test, Features are extracted for a number of keypoints from all over 
+the pointcloud. Keypoint selection is described later in this section.(See figure \ref{FeatureEXtract.algorithm}) 
+
+
+As mentioned, for each pair of ($Qpoint_i$, $OPoint_j$) a feature vector gets extracted. A two layer nested loop selects $QPoint_i$ from all {\it keypoints}, where\\
+\\
+$i = 0$ to $n$ \\
+$n = size(PointcloudDownsampled)$\\
+\\
+and for each $QPoint_i$, the inner loop selects $OPoint_j$ from points in {\it TFP Pointcloud} that are within {\it S-Radius} of $QPoint_i$.\\
+\\
+$j = 0$ to $m$\\
+$m = size(SearchBlob)$\\
+
+
+
+% The goal here is to get samples which are useful in building the context model for objects of interest. 
+% This is done in a way that for each key point, which is considered as a QPoint when it is selected for feature extract, 
+% we take a neighborhood of points and their corresponding point-normals to extract features from (Query Blob). 
 %So thing that happens here is studding the geometry around the query point as a candidate geometry of a positive context.
 
-The important idea applied here is the view point used in VFH.
-For each QPoint and its corresponding Query blob, a number of points in a radius from the QPoint is considered as the view points 
-(OPoints).
-A sample is extracted for each pair of $Qpoint$ and $Opint_i$.
-This way due to the difference in viewpoint, the features extracted for a single query point and its query blob would be slightly 
-different. 
-This will result in discrimination between same context viewed from different view point which is to our benefit.
+The {\it Query blob} for each $QPoint$ is grabbed from the original pointcloud and their corresponding surface normals are used to obtain feature response with respect to the selected view point. We consider $OPoint_j$ as the view point. As the inner loop picks different $OPoints$, the feature response for {\it Query blob i} gets optained from several different viewpoints, surrounding it. This way due to the difference in viewpoint, the features extracted for a single query point and its query blob would be different.
 
-As mentioned above, these viewpoints are candidates for being object points.
-In each sample if the OPoint in a pair of $(QPoint,OPint)$, is actually an object point we want this sample to be labeled as 
-a positive sample and if not, to be a negative one. 
+
+Now if the pointcloud is annotated and samples are being extracted for Train dataset, the algorithm checks if the selected $OPoint$ is located on an annotated object or not. If it is, the sample gets labled as positive and if not, as negative. In \ref{Learning.ssec}, we see how we deal with negative and positive samples.
+
 %This means that if the features are extracted from a query blob and for a view point which is within a specific distance from it,
 %is located on the object of interest the query blob is actually a context for that object.
-The view point also helps to encode the most probable location of the object with respect to the positive context. 
+The view point also helps to encode the most probable locations of the object with respect to the predicted regions as positive context, in test pointlouds. Another important point here is that we want the model to be able to locate candidates for context in a test pointcloud where 
+object may not be present at the moment but its context is. Therefor, we need the OPoints to be independent from actual points in the pointcloud.
+{\it TFP-cloud} helps us to provide independent points to be considered as viewpoints.
 
-Another important point here is that we want the model to be able to locate candidates for context in a test pointcloud where 
-object may be not present at the moment but its context is.
-Therefor, we need the OPoints to be independent from actual points in the pointcloud.
 
-This is where TFP-cloud finds its role.
-This is a pointcloud generated in accordance to the input pointcloud which includes points with fixed structure to be used as 
-candidate OPoints in feature extract.
-Using these points as OPoints, we have fixed viewpoints to sample the context for. 
-To have the same structure in train and test data, we use the same OPoints in feature extract for train set as well.
-The only difference in feature extract for train and test is that in train it is checked if the OPoint is on the object, using 
-labels from annotated cloud. 
-Then, if the answer is positive, the extracted sample would be a positive one. 
-If not, it would be a negative sample. 
-But in feature extract for test, we just do not do this check.
 
-QPoints would be selected in a loop on key points in the pointcloud. 
-The key points are all points in a down sampled version of the input cloud with a radius that is dependent to the 
-size of the object of interest. 
-This way, we have a uniformly distributed key points in the input pointcloud which will make the sampling more informative.
-For each of these QPoints, a blob around them is considered from the input cloud with point normals(Query blob).
-Therefore, Qpoints come from the down sampled cloud while query blob is from the original cloud.
-
-In another loop, the OPoints are assigned  as the view point in feature extraction of each sample. 
-Feature vector would be extracted for this blob and the OPoint. 
-Figure ~\ref{PointParameters_Diagram.figure} shows these points and their related parameters. 
-The values mentioned in the figure is for an example object class.
 
 \begin{figure}[t]
   \centerpsw{PointParameters_Diagram}{0.65\columnwidth}
@@ -540,7 +529,7 @@ The values mentioned in the figure is for an example object class.
 \begin{algorithmic}[1]
 \REQUIRE Pointcloud\_annotated or Pointcloud\_converted(Depending train or test).
 \REQUIRE Pointcloud\_Normals.
-\REQUIRE Pointcloud\_Generated.
+\REQUIRE Pointcloud\_Generated (TFP).
 \REQUIRE S\_Radius
 \REQUIRE OPoint\_Radius
 \medskip
@@ -570,67 +559,59 @@ The values mentioned in the figure is for an example object class.
 {A brief algorithmic description of Feature Extract.}
 \label{FeatureEXtract.algorithm}
 \end{algorithm}
+
+
+
+
 % Learning
 
 \subsection{Learning}
 \label{Learning.ssec}
 
-% begin{figure}[t]
-%   \centerpsw{PreProcess}{0.9\columnwidth}
-%   \caption[PreProcess overview]
-%   {An overview of the PreProcess}
-%   \label{Learning.figure}
-% \end{figure}
+\begin{figure}[t]
+  \centerpsw{Learning}{0.4\columnwidth}
+  \caption[Learning overview]
+  {An overview of the Learning process}
+  \label{LearningFlowchart.figure}
+\end{figure}
 
 %learning is done using libsvm
-After Feature extraction, the resulting data set for train is made in a way that it includes samples from several pointclouds 
-for the same object class. 
-In first experiments we used a single Gaussian kernel for the whole feature vector whose fields are of two different types. 
-As mentioned before part one is two float numbers and part two is a histogram. 
-Later we separated these two parts to apply independent kernels on each. 
+After Feature extraction, the train set is made in a way that it includes samples from several different pointclouds for the same object class. A bigger portion of the train samples gets selected for training and the rest for validation. In first experiments we used a single Gaussian kernel for {\it SVM} on the whole feature vector whose fields are of two different types. As mentioned before the first two fields are float numbers and the rest is histogram. Later we separated these two parts to apply independent kernels on each which as expected improved the results significantly.(See \ref{Results.sec}) 
 
-Another important issue here is the distribution of samples in each of positive and negative classes. 
-From the data we extracted, in average, about one percent of the samples were positive and the rest were negative.
-This is because the annotated object is a small part of the pointcloud and positive samples are the samples extracted from its 
-surrounding. 
-This significant difference in number of samples in positive and negative classes makes the classifier to prefer classifying test samples into 
-the class with more train data.
 
-In addition, this issue has some other effects that make the classier confused. 
-The features extracted from blobs in object's neighborhood may be so similar to some feature extracted from a blob far from the 
-object, while the first one would be a positive sample in train data and the second one would be a negative sample. 
-For instance, features extracted for a cup context, which can be a table's surface, will get positive label when it is extracted 
-from a blob close to where the annotated cup is located. 
-But features from the same surface which is extracted from a region far from the annotated object gets a negative label.
-Because there was no annotation nearby to make it positive. 
+Another important issue here is the distribution of samples in each of positive and negative classes. From the data we extracted, in average, about one percent of the samples were positive and the rest were negative. This is because the annotated object is a small part of the pointcloud and positive samples are the samples extracted from its surrounding. This significant difference in number of samples in positive and negative classes makes the classifier to be biosed toward the negative class. 
 
-In order to solve the mentioned issue and both of its effects, or at least improve the result toward our goal, we needed to do 
-an unbalanced weighting for our samples. 
-We decided to assign different weights for misclassification cost in SVM binary classifier. 
-It should be in a way that not only compensates the lower amount of positive samples, but also emphasizes the importance of 
-positive samples compared to negative ones. 
-It can be inferred that there should be a big weight for positive class and rather small value for negative class.
-In Section ~\ref{ExperimentalSetup.sec} a parameter selection procedure used to find suitable values for them is discussed.      
 
-The way datasets and experimental environment is created is discussed in Section ~\ref{ExperimentalSetup.sec}.
+In addition, this issue has some other effects that make the classier confused. The features extracted from blobs in object's neighborhood may be so similar to some feature extracted from a blob far from the object, while the first one would be a positive sample in train data and the second one would be a negative sample. For instance, the scene depicted in figure \ref{FEStructure.figure}, for the marked {\it Query blob}, when the viewpoint is the one which is located on the trashbin, extracted feature vector is labled as positive sample. While for the same blob, when the viewpoint is any other depicted {\it OPoints}(shown in yellow), extracted sample would be a negative one, since they are not located on any annotated object. 
+
+
+In order to solve the mentioned issue and both of its effects, or at least improve the result toward our goal, we needed to do an unbalanced weighting for our samples. We decided to assign different weights for misclassification cost in SVM binary classifier. It should be in a way that not only compensates the lower amount of positive samples, but also emphasizes the importance of positive samples compared to negative ones. It can be inferred that there should be a big weight for positive class and rather small value for negative class. In Section ~\ref{ExperimentalSetup.sec} a parameter selection procedure, used to find suitable values for them, is discussed. The way datasets and experimental environment is created is discussed in Section ~\ref{ExperimentalSetup.sec}.
+
+
 
 
 \subsection{Visualization}
 \label{visualization.ssec}
 
-% begin{figure}[t]
-%   \centerpsw{PreProcess}{0.9\columnwidth}
-%   \caption[PreProcess overview]
-%   {An overview of the PreProcess}
-%   \label{Visualization.figure}
-% \end{figure}
+\begin{figure}[ht]
+  \centerpsw{Visualization}{0.7\columnwidth}
+  \caption[Visualization overview]
+  {An overview of the Visualization}
+  \label{VisualizationFlowchart.figure}
+\end{figure}
+
+Once the context model for each object class is trained, it can be applied on any new pointclouds to obtain regions with high likelyhood of being context for that object class. The pointloud goes through feature extract process, as mentioned in previous section,and the obtained samples for each {\it keypoint} ({\it QPoint}) get a value between 0 and 1, as their likelyhood of being a context point. 
+
+
+These likelyhood values then get stored in each corresponding {\it keypoint}. Then the pointcloud get visualized with these keypoints and their corresponding query blobs marked with a recognizable color. Figure \ref{VisualizationFlowchart.figure} the process overview is summerized. 
+In the next chapter, the results are evaluated and some example visualizations, presented.
 
 
 % parameters
 \subsection{Parameters}
 \label{Parameters.ssec}
 
-Feature extract parameters:
+{\bf Feature extract parameters}:
 As mentioned before and depicted in figure ~\ref{PointParameters_Diagram.figure} there are some parameters that play great role in
 achieving good results. 
 These parameters are:
@@ -650,10 +631,9 @@ This dependency is not so tight, it means that the object size does not need to 
 As long as these values does not cause the object to be missed, they are acceptable.
 The object can be missed if the down sampling radius, which depends on the object size, is too large. 
 On the other hands, small values causes the complexity to increase and computation time to get too long.  
-As a result, we reduced the number of dependencies to a single parameter which a rough estimate of the object size.
-
-
-Learning parameters:
+As a result, we reduced the number of dependencies to a single parameter which a rough estimate of the object size.\\
+\\
+{\bf Learning parameters}:
 \begin{itemize}
  \item $w_i$: Weight for class labeled (i)
  \item $c$: Sets the cost value for misclassification.
@@ -668,10 +648,11 @@ expect from the classifier.
 \section{Qualitative study of samples}
 \label{QStudy.ssec}
 
-It can help if we first check some plots showing how does some random samples look like and how discriminative the feature vector 
+Before describing the experiments and evaulating the results, in this section the extracted samples are briefly reviewed. First lets check some plots showing how does some random samples look like and how discriminative the feature vector  
 can be.
 Figures ~\ref{CompareNegHis.figure} and ~\ref{ComparePosHist.figure} show the plot of two random negative and two random 
 positive samples.   
+
 % Results
 \begin{figure}[htp]
   \begin{center}
@@ -728,12 +709,11 @@ It should be noticed that the first part of the plot reflects the view point com
 
 And Figure ~\ref{DistanceOFTwoPosHist.figure} is the same plot for positive samples. 
 Features extracted for each class can have big differences as well, which was predictable. 
-Considering different surfaces captured as context by these features that can belong to a class causes the differences. 
+Considering different surfaces captured as context by these features that can belong to a class, causes the differences. 
 A positive sample can be representing, for instance, the surface of a table or a wall or the meeting region of these 
 two surfaces. 
 This comparison gives us an idea about how challenging it is to train a classifier for such data.
-As mentioned before, it is also important that more attention to be put on learning the positive samples rather than 
-negative ones. 
+As mentioned before, it is also important to put more attention on the positive samples rather than negative ones, when training the model. 
 
 
 

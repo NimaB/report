@@ -2,39 +2,59 @@
 \chapter{Introduction}
 \label{Introduction.ch}
 %------------------------------------------------------------------------
- Object detection is one of the most common problems in computer vision and in most cases solutions for it are complicated or/and expensive. Therefore finding ways to bring this cost or complexity down can be very valuable. This expensive problem is a very easy task for us as human being, so looking into the methods humen use to find an object or recognize it can assist on proposing a solution for an AI system.
+ Object detection is one of the most common problems in computer vision, and in
+most cases, solutions for it are complicated or/and expensive. Therefore finding
+ways to bring this cost or complexity down can be very valuable. This costly
+problem is a straightforward task for us as humans, so looking into the methods
+humans use to find an object or recognize it can assist in proposing a solution
+for an AI system.
  
-When a human is looking for an object, based on experience, he limits the search area to places he expects more to find the object of interest. If the search area is a familiar place, based on their memory, they directly go to the last place they seen the object. If its a new place and no prior knowledge about that place is availbale, he looks for places that logically the object should be located at. 
+When a human is looking for an object, based on experience, he limits the
+search area to places he expects to find the object of interest. If the search
+area is a familiar place, based on their memory, they directly go to the last place
+they saw the object. If it is a new place and no prior knowledge about that place
+is available, he looks for places that logically the object should be located at.
 
-This can be easier to imagine if we assume that the room is dark and our agent need to touch objects to find them. For instance if the object is a Telephone, the agent first look for a table or a desk in the room and then start moving his hand slowly on the desk/table's surface (context for the object of interest) to find the object that is the most similar to what he has in memory of a Telephone (object detection). 
-Only in the worst-case scenario and without the knowledge of the object, one would perform a thorough search of the 
-whole scene.
-In other words, the strategy depends on the amount of information about the target object.
+This can be easier to imagine if we assume that the room is dark and our
+agent needs to touch objects to find them. For instance, if the object is a Tele-
+phone, the agent first look for a table or a desk in the room and then start
+moving his hand slowly on the desk/table's surface (context for the object of
+interest) to find the object that is the most similar to what he has in memory of
+a Telephone (object detection). Only in the worst-case scenario and without the
+knowledge of the object one would perform a thorough search of the whole
+scene. In other words, the strategy depends on the amount of information about
+the target object.
 
 
 
-{\it Torralba et al.} in \cite{eyeMovement} pointed to the fact that many experiments are showing that the human visual system uses 
-contextual information to facilitate a search for objects. They propose the use of context for object detection using 2D images.They take two parallel approaches to predict the image regions likely to be focused on by human observers, naturaly searching for objects in real world scenes;One computes local features (saliency) and the other computes global (scene-centered) features.
+{\it Torralba et al.} in \cite{eyeMovement} pointed out that many experiments show
+that the human visual system uses contextual information to facilitate a search
+for objects. They propose the use of context for object detection using 2D im-
+ages. They take two parallel approaches to predict the image regions likely to
+be focused on by human observers, naturally searching for objects in real-world
+scenes; One computes local features (saliency), and the other computes global
+(scene-centered) features.
 %Although, it is also mentioned that how this information is applied in the process is not completely known to scientists yet.
 
 %To clarify what is considered as object context in this work, it should be mentioned that surfaces that surround an object as 
 %a single body is a context for the object. 
-A similar behavior could be implemented on a mobile robot or any AI systems.
-A piece of valuable prior knowledge for an object detection/recognition problem could be semantic knowledge about places and context where the object of interest can be found in. This not only can reduce the search time but also can increase the chance of success and correctness of the results. Role of contextual information is even more significant when availble direct object features are not relaible enough, due to viewing condition. 
+A similar behavior could be implemented on a mobile robot or any AI system. A piece of valuable prior knowledge for an object detection/recognition
+problem could be semantic knowledge about places and contexts where the object of interest can be found. This can reduce the search time and increase the chance of success and correctness of the results. The role of
+contextual information is even more significant when available direct object features are not reliable enough due to viewing conditions. 
 
 %------------------------------------------------------------------------------------------------------------
 
 \section {Outline}
 \label{Outline.sec}
 
-In following sections of this chapter the general formulation of the problem is stated which follows by a brief analysis of related works. Then Motivation and our contributions are presented.
+In the following sections of this chapter, the general formulation of the problem is stated, follows by a brief analysis of related works. Then Motivation and our contributions are presented.
 % In Chapter \ref{ModelingObjectContext.ch}, the problem definition, more motivational factors, applications and 
 % challenges are presented.
 
 
 Chapter\ref{3DModelofObjectContext.ch}, describes our challenges, method and details about the implementation, experiments, and evaluation. 
 %In Chapter\ref{UsingObjectContextforPlaceClassification.ch}, 
-Finally, applications of our model and descriptor in place classification is discussed and an analytical study is done for the results expected for this application. Then the next potential steps that can be worked on in pursue of this work is suggested in Chapter \ref{Conclusion.ch}.
+Finally, our model and descriptor applications in place classification are discussed, and an analytical study is done for the results expected for this application. Then the next potential steps that can be worked on in pursuit of this work is suggested in Chapter \ref{Conclusion.ch}.
 
 %-------------------------------------------------------------------------------------------------------------------------------------------
 

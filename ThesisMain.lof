@@ -2,49 +2,53 @@
 \contentsline {figure}{\numberline {1.1}{\ignorespaces Illustration of a sample Context.}}{5}{figure.1.1}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {2.1}{\ignorespaces System Overview}}{11}{figure.2.1}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces ViewPoint Component of VFH}}{13}{figure.2.2}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Local geomentry elements of VFH.}}{14}{figure.2.3}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces PreProcess overview}}{15}{figure.2.4}%
-\contentsline {figure}{\numberline {2.5}{\ignorespaces Example scene and object for Annotation tool}}{18}{figure.2.5}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces Annotation tool result}}{19}{figure.2.6}%
-\contentsline {figure}{\numberline {2.7}{\ignorespaces Illustration of the items used in Feature Extract.}}{20}{figure.2.7}%
-\contentsline {figure}{\numberline {2.8}{\ignorespaces Feature extract structure}}{21}{figure.2.8}%
-\contentsline {figure}{\numberline {2.9}{\ignorespaces Comparative plots of random samples.}}{24}{figure.2.9}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Compare two random negative samples.}}}{24}{figure.2.9}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Compare two random Positive samples.}}}{24}{figure.2.9}%
-\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Distance between random negative samples.}}}{24}{figure.2.9}%
-\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Distance between random Positive samples.}}}{24}{figure.2.9}%
-\contentsline {figure}{\numberline {2.10}{\ignorespaces Distance of Positive and Negative samples}}{25}{figure.2.10}%
-\contentsline {figure}{\numberline {2.11}{\ignorespaces Detailed Overview of the system}}{26}{figure.2.11}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Illustration of the items used in Feature Extract.}}{12}{figure.2.2}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces ViewPoint Component of VFH}}{14}{figure.2.3}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Local geomentry elements of VFH.}}{15}{figure.2.4}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces PreProcess overview}}{16}{figure.2.5}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Annotation overview}}{18}{figure.2.6}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Example scene and object for Annotation tool}}{20}{figure.2.7}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Annotation tool result}}{21}{figure.2.8}%
+\contentsline {figure}{\numberline {2.9}{\ignorespaces FeatureExtract overview}}{22}{figure.2.9}%
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Feature extract structure}}{23}{figure.2.10}%
+\contentsline {figure}{\numberline {2.11}{\ignorespaces Learning overview}}{25}{figure.2.11}%
+\contentsline {figure}{\numberline {2.12}{\ignorespaces Visualization overview}}{25}{figure.2.12}%
+\contentsline {figure}{\numberline {2.13}{\ignorespaces Comparative plots of random samples.}}{28}{figure.2.13}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Compare two random negative samples.}}}{28}{figure.2.13}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Compare two random Positive samples.}}}{28}{figure.2.13}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Distance between random negative samples.}}}{28}{figure.2.13}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Distance between random Positive samples.}}}{28}{figure.2.13}%
+\contentsline {figure}{\numberline {2.14}{\ignorespaces Distance of Positive and Negative samples}}{29}{figure.2.14}%
+\contentsline {figure}{\numberline {2.15}{\ignorespaces Detailed Overview of the system}}{30}{figure.2.15}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Train set pointclouds}}{28}{figure.3.1}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Full pointcloud of a kitchen.}}}{28}{figure.3.1}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {A partial view of a office.}}}{28}{figure.3.1}%
-\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {A full pointcloud of an office.}}}{28}{figure.3.1}%
-\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {A full pointcloud of another kitchen in the same building.}}}{28}{figure.3.1}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Challenges with some pointclouds}}{29}{figure.3.2}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {A partial view of a bathroom.}}}{29}{figure.3.2}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {A partial view of an office with lots of missing points.}}}{29}{figure.3.2}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Train set pointclouds including four different object class.}}{30}{figure.3.3}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Partial cloud including telephone, mouse and trash bin.}}}{30}{figure.3.3}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {The same scene with different location of the objects.}}}{30}{figure.3.3}%
-\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Partial cloud including white board wipers.}}}{30}{figure.3.3}%
-\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {A partial cloud including several instances of 3 object categories.}}}{30}{figure.3.3}%
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Evaluation diagram for experiments with Gaussian kernel.}}{33}{figure.3.4}%
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Prediction of Trash bin model.}}{34}{figure.3.5}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {A test pointcloud for trash bin model, marked region with red circle is the predicted context.}}}{34}{figure.3.5}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Focused to predicted region.}}}{34}{figure.3.5}%
-\contentsline {figure}{\numberline {3.6}{\ignorespaces Visualization of context model prediction on sample cloud 1 from validation set.}}{35}{figure.3.6}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Predicted context for Mouse.}}}{35}{figure.3.6}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Predicted context for white-board wiper.}}}{35}{figure.3.6}%
-\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Predicted context for Telephone.}}}{35}{figure.3.6}%
-\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Predicted context for Trash Bin.}}}{35}{figure.3.6}%
-\contentsline {figure}{\numberline {3.7}{\ignorespaces Evaluation results for four object classes.}}{36}{figure.3.7}%
-\contentsline {figure}{\numberline {3.8}{\ignorespaces Visualization of context model prediction on sample cloud 2 as a test cloud.}}{38}{figure.3.8}%
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Predicted context for Mouse.}}}{38}{figure.3.8}%
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Predicted context for white-board wiper.}}}{38}{figure.3.8}%
-\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Predicted context for Telephone.}}}{38}{figure.3.8}%
-\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Predicted context for Trash Bin.}}}{38}{figure.3.8}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Train set pointclouds}}{32}{figure.3.1}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Full pointcloud of a kitchen.}}}{32}{figure.3.1}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {A partial view of a office.}}}{32}{figure.3.1}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {A full pointcloud of an office.}}}{32}{figure.3.1}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {A full pointcloud of another kitchen in the same building.}}}{32}{figure.3.1}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Challenges with some pointclouds}}{33}{figure.3.2}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {A partial view of a bathroom.}}}{33}{figure.3.2}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {A partial view of an office with lots of missing points.}}}{33}{figure.3.2}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Train set pointclouds including four different object class.}}{34}{figure.3.3}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Partial cloud including telephone, mouse and trash bin.}}}{34}{figure.3.3}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {The same scene with different location of the objects.}}}{34}{figure.3.3}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Partial cloud including white board wipers.}}}{34}{figure.3.3}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {A partial cloud including several instances of 3 object categories.}}}{34}{figure.3.3}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Evaluation diagram for experiments with Gaussian kernel.}}{37}{figure.3.4}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Prediction of Trash bin model.}}{38}{figure.3.5}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {A test pointcloud for trash bin model, marked region with red circle is the predicted context.}}}{38}{figure.3.5}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Focused to predicted region.}}}{38}{figure.3.5}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Visualization of context model prediction on sample cloud 1 from validation set.}}{39}{figure.3.6}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Predicted context for Mouse.}}}{39}{figure.3.6}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Predicted context for white-board wiper.}}}{39}{figure.3.6}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Predicted context for Telephone.}}}{39}{figure.3.6}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Predicted context for Trash Bin.}}}{39}{figure.3.6}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Evaluation results for four object classes.}}{40}{figure.3.7}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Visualization of context model prediction on sample cloud 2 as a test cloud.}}{42}{figure.3.8}%
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Predicted context for Mouse.}}}{42}{figure.3.8}%
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Predicted context for white-board wiper.}}}{42}{figure.3.8}%
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Predicted context for Telephone.}}}{42}{figure.3.8}%
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Predicted context for Trash Bin.}}}{42}{figure.3.8}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Overview of a semantic mapping system}}{42}{figure.4.1}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Probabilistic graphical model of place-object.}}{44}{figure.4.2}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Overview of a semantic mapping system}}{46}{figure.4.1}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Probabilistic graphical model of place-object.}}{48}{figure.4.2}%
