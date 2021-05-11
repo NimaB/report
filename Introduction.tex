@@ -16,8 +16,7 @@ they saw the object. If it is a new place and no prior knowledge about that plac
 is available, he looks for places that logically the object should be located at.
 
 This can be easier to imagine if we assume that the room is dark and our
-agent needs to touch objects to find them. For instance, if the object is a Tele-
-phone, the agent first look for a table or a desk in the room and then start
+agent needs to touch objects to find them. For instance, if the object is a Telephone, the agent first look for a table or a desk in the room and then start
 moving his hand slowly on the desk/table's surface (context for the object of
 interest) to find the object that is the most similar to what he has in memory of
 a Telephone (object detection). Only in the worst-case scenario and without the
@@ -47,26 +46,27 @@ contextual information is even more significant when available direct object fea
 \section {Outline}
 \label{Outline.sec}
 
-In the following sections of this chapter, the general formulation of the problem is stated, follows by a brief analysis of related works. Then Motivation and our contributions are presented.
+In the following sections of this chapter, the general formulation of the problem is stated, follows by a brief analysis of related works. Then motivation and our contributions are presented.
 % In Chapter \ref{ModelingObjectContext.ch}, the problem definition, more motivational factors, applications and 
 % challenges are presented.
 
 
-Chapter\ref{3DModelofObjectContext.ch}, describes our challenges, method and details about the implementation, experiments, and evaluation. 
+Chapter\ref{3DModelofObjectContext.ch}, describes our challenges, method and details about the implementation. Chapter \ref{Evaluation.ch} talks about   experiments, results and their evaluation. 
 %In Chapter\ref{UsingObjectContextforPlaceClassification.ch}, 
 Finally, our model and descriptor applications in place classification are discussed, and an analytical study is done for the results expected for this application. Then the next potential steps that can be worked on in pursuit of this work is suggested in Chapter \ref{Conclusion.ch}.
 
 %-------------------------------------------------------------------------------------------------------------------------------------------
+\section{Problem Formulation}
+\label{Formulation.sec}
 
-
-In this work our goal is to propose and develop a method to detect 3D context of object, rather than the object itself. The detected context then can be used as a very useful prior for object detection tasks as well as place categorization. The task of object detection can be formulated, in general, as a probablities of observing some features in a scene $V$, given the presense of an object $O$:
+In this work, our goal is to propose and develop a method to detect the ``3D context of objects'', rather than the object itself. The detected context can then be used as a very useful prior for object detection tasks and place categorization. The task of object detection can be formulated, in general, as a probability of observing some features in a scene $V$, given the presence of an object $O$:
 
 \begin{equation}
  \label{ObjectDetction.eq}
     p(O|V)
 \end{equation}
 
-Features can be seen as two different sets, one directly related to the object (interinsic features, such as size, shape, color,...) and one related to its context. We call the former $V_I$ and the latter as $V_C$.
+Features can be seen as two different sets, one directly related to the object (intrinsic features, such as size, shape, color,etc) and one related to its context. We call the former $V_I$ and the latter as $V_C$.
 
 \begin{equation}
  \label{FeaturesSet.eq}
@@ -99,31 +99,31 @@ considered in \cite{TrollbaContexBased}, \cite{TorralbaContextualPriming}, \cite
 and \cite{aydemir2012_3Dcontext}.
 
 Torralba et al. in \cite{TrollbaContexBased}, used a low dimensional global image 
-     representation for recognition of places and showed how contextual information can provide priors for object recognition. ``We show how we can use the context to predict properties of objects without even looking at the local visual evidence''. They are considering the place category as a contextual information and suggested that knowing the category of a place helps to find objects that are relevant to that place category. Once the place category (context) is determined, system selects which object detectors should run. Their system is trained and tested on indoor and outdoor scenes using 2D images as inputs. Their system appear to perform well on known places but not as good for new places(unseen).
+     representation for recognition of places and showed how contextual information can provide priors for object recognition. ``We show how we can use the context to predict properties of objects without even looking at the local visual evidence''. They consider the place category as a piece of contextual information and suggested that knowing the category of a place helps to find objects relevant to that place category. Once the place category (context) is determined, the system selects which object detectors should run. Their system is trained and tested on indoor and outdoor scenes using 2D images as inputs. Their system appears to perform well in known places but not as good for new places(unseen).
 %      In following chapters we see how we defined the context of an object and We have a more fine-grained definition for the context of the object which is limited to a 
 %      vicinity around the object.
 %      In this work, we are suggesting an opposite direction which is using local object context information can help us in recognizing the category of a place.
 %      
      
      
-     {\it Torralba} in In \cite{TorralbaContextualPriming}, is considering a general representation of a whole scene in which an object is present, as its context (similar to the above). Context with their definition is proportional to the size of the object with respect to each scene (image). So if the object is taking a small percentage of the image, the context will be mainly its background, while in a focused image where most pixeles belong to the object, contextual information becomes interinsic image features.Then they compute a context-centered object likelyhood by modeling the relationship between contexualt features and object properties.As the result, regions of an image with higher probablity of contanining the object of interest gets marked.   
+     {\it Torralba} in In \cite{TorralbaContextualPriming}, is considering a general representation of a whole scene in which an object is present, as its context (similar to the above). Context with their definition is proportional to the object's size with respect to each scene (image). So if the object is taking a small percentage of the image, the context will be mainly its background. In contrast, in a focused image where most pixels belong to the object, contextual information becomes intrinsic image features. Then they compute a context-centered object likelihood by modeling the relationship between contextual features and object properties.As a result, regions of an image with a higher probability of containing the object of interest get marked.   
      
-     Perko and Leonardis in In \cite{PerkoLeonardisContextDriven} also proposed a method to focus attention on regions in an image (2D) where object of interest is more likely to be found. They showed performance of their approach for pedestrian detection in urban scenes, although the method said to be applicable to any object category and independent from task specific models. They concluded that context awareness provides benefits over pure local appearance-based processing and decreases search complexity while improving the robustness of object detection. 
+     Perko and Leonardis in In \cite{PerkoLeonardisContextDriven} also proposed a method to focus attention on regions in an image (2D) where an object of interest is more likely to be found. They showed the performance of their approach for pedestrian detection in urban scenes. However, the method is said to apply to any object category and independent from task-specific models. They concluded that context-awareness provides benefits over pure local appearance-based processing and decreases search complexity while improving the robustness of object detection. 
      
-     Compared to \textit{Torallba et al.} they used different features and descriptors and also evaluated combining their contextual priming method with state-of-the-art object detectors. They used an additional contextual cue, the veiwpoint prior in addition to geometrical and texture features to estimate position of the horizon.Geometrical features capture probablity of each context point to belong to each of three classes of \textit{Ground}, \textit{Sky} or \textit{vertical} (Buildings, trees, ...). 
+     Compared to \textit{Torallba et al.} they used different features and descriptors and evaluated combining their contextual priming method with state-of-the-art object detectors. They used an additional contextual cue, the viewpoint prior, in addition to geometrical and texture features to estimate the position of the horizon.Geometrical features capture probability of each context point to belong to each of three classes of \textit{Ground}, \textit{Sky} or \textit{vertical} (Buildings, trees, ...). 
      
-     For extracting contextual features, they consider a center for their object of interest then sample the features at 60 points around that object center (5 radii and 12 orientations). The obtained information is concentrated into one feature vector for that object center. They use linear SVM to train their model then convert the results into probablities of a pedestrian being present at a given pixel position. 
+     For extracting contextual features, they consider a center for their object of interest then sample the features at 60 points around that object center (5 radii and 12 orientations). The obtained information is concentrated into one feature vector for that object center. They use linear SVM to train their model then convert the results into probabilities of a pedestrian being present at a given pixel position. 
      
-     Their data aquisition setup, specially for estimation of the viewpoint prior needs to be adjusted specifically based on the object category and application. 
+     Their data acquisition setup, especially for estimating the viewpoint prior, needs to be adjusted based explicitly on the object category and application. 
      
      
-     \textit{Aydemir et al.} in  \cite{aydemir2012_3Dcontext} argued that ``the placement of everyday objects is highly corelated to the 3D structure of an environment- as opposed to being correlated to the appearance of the environment''. So they belive in existance of a correlation between an object and its natrual context, due to the physical support and reachability that the context can structually offer. 
+     \textit{Aydemir et al.} in  \cite{aydemir2012_3Dcontext} argued that ``the placement of everyday objects is highly correlated to the 3D structure of an environment- as opposed to being correlated to the appearance of the environment''. So they believe in the existence of a correlation between an object and its natural context due to the physical support and reachability that the context can structurally offer. 
      
-     They also train models for object context to focus the attention of object detectors to reduced search regions which match the learned models. They benefit from the recently availble RGB-D sensors to obtain 3D data and show how 3D context of objects can be a ``Strong indicator of object placement in everyday scenes''. They collected large dataset from five different locations (but all university indoor rooms and corridors) using Microsoft Kinect. They are modeling object context using geometrical features of a neighbourhood of annotated objects and trained a SVM, using weighthed feature responces collected from different parts of the neighbourhood. For capruting the geometry of they calculated histograms of surface normals on the 3D data corresponding to each selected region from an image.
+     They also train models for object context to focus the attention of object detectors to reduced search regions that match the learned models. They benefit from the recently available RGB-D sensors to obtain 3D data and show how the 3D context of objects can be a ``Strong indicator of object placement in everyday scenes''. They collected a large dataset from five different locations (but all university indoor rooms and corridors) using Microsoft Kinect. They are modeling object context using geometrical features of a neighborhood of annotated objects and trained a SVM, using weighted feature responses collected from different neighborhood parts, for capturing the geometry of they calculated histograms of surface normals on the 3D data corresponding to each selected region from an image.
      
-     \textit{Ayedemit et al.}'s definition of context is close to the definition we used in our work but they used 2d images, plus depth information to model their context and do their evaluations, while we used full 3D reconstructed pointclouds of the scenes. Using the pointcloud allowed us to be able to collect features from the observed environment as it is without the need to focus on objects and its neighnourhood (Training and test sets are full Pointlcouds and not pruned and adjusted scenes. Similar to us, they noticed how much hight can be an informative factor for most object classes. 
+     \textit{Ayedemit et al.}'s definition of context is close to the definition we used in our work. However, they used 2d images, plus depth information to model their context and do their evaluations, while we used full 3D reconstructed pointclouds of the scenes. Using the pointcloud allowed us to collect features from the observed environment without the need to focus on objects and their neighborhood (Training and test sets are full Pointlclouds and not pruned and adjusted scenes. Similar to us, they noticed how much height can be an informative factor for most object classes. 
      
-     In our approach, we defined a point of view for our feature collection which can mitigate the issue mentioned in \cite{aydemir2012_3Dcontext}, for larger objects. Our viewpoint provides a framework for the features to be collected from different point of veiws with respect to the object and makes it indifferent to the size or distance from the observer (camera). In \cite{TorralbaContextualPriming}, \cite{TrollbaContexBased} and \cite{PerkoLeonardisContextDriven}, objects that takes a small fraction of an image pixeles can get neglected, while in \cite{aydemir2012_3Dcontext}, the framework performs less effective for largers objects, due to the variance of observable background as a result of difference in the viewpoint. 
+     In our approach, we defined a point of view for our feature collection, which can mitigate the issue mentioned in \cite{aydemir2012_3Dcontext}, for larger objects. Our viewpoint provides a framework for the features to be collected from different points of view with respect to the object and makes it indifferent to the size or distance from the observer (camera). In \cite{TorralbaContextualPriming}, \cite{TrollbaContexBased} and \cite{PerkoLeonardisContextDriven}, objects that takes a small fraction of an image pixels can get neglected, while in \cite{aydemir2012_3Dcontext}, the framework performs less effective for larger objects, due to the variance of observable background as a result of difference in the viewpoint. 
      
      %In these works, the definition of object context becomes closer to what we consider.
      
@@ -158,8 +158,8 @@ Torralba et al. in \cite{TrollbaContexBased}, used a low dimensional global imag
 \section {Contributions}
 \label{Contributions.sec}
 %----------------------------------------------------------------------------
-In this work, we use 3D pointclouds of different place categories and annotated objects in them as input to train 3D models of object context. Then these models are applied on test pointclods to determine which parts of the pointclod (i.e. the place) is most probable context for an object of interest. The object context is defined as surfaces in the vicinity of the object of interest. This includes surfaces the object is located on or next to and also other objects which can usually be found beside the object of interest. 
-For instance, if the object of interest is a \textit{kitchen water tap}, it's context can be the 
+In this work, we use 3D pointclouds of different place categories and annotated objects in them as input to train 3D models of object context. Then these models are applied on test pointclouds to determine which parts of the pointcloud (i.e., the place) are the most probable context for an object of interest. The object context is defined as surfaces in the vicinity of the object of interest. This includes surfaces the object is located on or next to and other objects that can usually be found beside the object of interest. 
+For instance, if the object of interest is a \textit{kitchen water tap}, its context can be the 
 \textit{kitchen sink} and the wall behind it. (Figure ~\ref{contextExample.figure})
 
 \begin{figure}[t]
@@ -171,24 +171,24 @@ For instance, if the object of interest is a \textit{kitchen water tap}, it's co
 \end{figure}
 
 We propose a unique method and features to build 3D models of object context, which not only can be used as a prior to 
-object detectors, but also as a very useful knowledge in building 3D representation of place categories. 
-Benefiting from our context models, the search area for object detection tasks can be reduced to parts of the scene with high 
-likelyhood of being the context for the object of interest. 
+object detectors, but also as instrumental knowledge in building a 3D representation of place categories. 
+By benefiting from our context models, the search area for object detection tasks can be reduced to parts of the scene with high 
+likelihood of being the context for the object of interest. 
 It also significantly increases the number of true positives in prediction results. 
 Combining the information encoded in this model with other features and structural information of different place categories can 
 result in a representation for places.
  
- To build Object Context models, we extracted features from several different regions of pointclouds with annoteted objects, as training dataset. Then applied supervised learning methods to train the models. Point-clouds that we used are full 3D representations of a place such as an office, a kitchen, etc. 
+ To build Object Context models, we extracted features from several different regions of pointclouds with annotated objects as the training dataset. Then applied supervised learning methods to train the models. Pointclouds that we used are full 3D representations of a place such as an office, a kitchen, etc. 
  The learning is done on features which are representing local geometry and spatial location of contexts of objects.
  
  The most important points about this work can be briefly mentioned as follows:
  
  \begin{itemize}
   \item Emphasizing the role of context in object detection and its related applications.
-  \item The Unique feature descriptor and methodology suggested to extract features and model the 3D Context of objects.
-  \item A simple method for annotating objects in Pointlcouds to be used as training data is proposed and implemented.
-  \item The input data used in this work are full point-clouds of places rather than single frames with depth information or 
-  2D images. The benefit of using 3D pointclouds over other data types is emphesized and shown.
+  \item The Unique feature descriptor and methodology suggested to extract features and model the 3D context of objects.
+  \item A simple method for annotating objects in pointclouds to be used as training data is proposed and implemented.
+  \item The input data used in this work are full pointclouds of places rather than single frames with depth information or 
+  2D images. The benefit of using 3D pointclouds over other data types is emphasized and shown.
   \item Unique method to evaluate the context models
   \item Suggesting the application of the Context model in place classification and proposing a method to do it.
   
@@ -218,55 +218,55 @@ result in a representation for places.
 \label{MotivationandApplications.sec}
 A motive for this work is to achieve a complete and robust 3D descriptor for places based on object contexts 
 rather than objects. 
-When a human agent enters a room, intuitively he is able to decide about the category of the place based on a simple and 
-shallow perception, with a good confidence. 
-Even if the room is not furnished yet and there is not many objects in it to help the agent in determining its 
+When a human agent enters a room, intuitively, he can decide about the category of the place based on a simple and 
+shallow perception, with reasonable confidence. 
+Even if the room is not furnished yet and there are not many objects in it, to help the agent in determining its 
 category. 
-Perhaps more than presence of some objects in a place, its the possibility of their presence that helps us 
-to determine the category of the place. Geometrical and spacial information about different regions in a place can help us to imagine what object categories can be placed in it. In an other word, what sort of object context can be found in that place. 
+Perhaps more than the presence of some objects in a place, it is the possibility of their presence that helps us 
+determine the place's category. Geometrical and spatial information about different regions in a place can help us imagine what object categories can be placed in it. In other words, what sort of object context can be found in that place. 
 For sure other information adds up to this knowledge to make a human able to distinguish between places, such as general 
 shape and size of the place also its location regarding other places. 
 A model for an object context can provide us with the likelihood of object presence.
 %Although, the Context Model, which we are talking about in this work, is not enough for making this decision, but is a useful 
 %prior.
 
-Among the applications that is considerable for the model, most obvious ones are as follows:
+Among the applications that are considerable for the model, the most obvious ones are as follows:
 
 
 \subsubsection*{Object Detection}
 
-Object detection is an expensive and complex task. Searching for context of 
-an object is, most of the times, significantly easier than the object itself. Specially, when the searched object is in a rather small scale comparing to the search area. 
-When the context is detected, then the search for the actual object is done in a reduced area, where is predicted as the context. 
-In addition, false positives are avoided or at least reduced. For example, when a table is detected as the context for a telephone, any similar shape which might be on the floor will not be considered by the object detector, which otherwise would have detected it as a candidate. 
+Object detection is an expensive and complex task. Searching for the context of 
+an object is, most of the time, significantly easier than the object itself, especially when the searched object is on a relatively small scale comparing to the search area. 
+Once the context is detected, the search for the actual object is done in a reduced area, within the parts predicted as the context.  
+In addition, false positives are avoided or at least reduced. For example, when a table is detected as the context for a telephone, any similar shape  on the floor will not be considered by the object detector, which otherwise would have detected it as a candidate. 
 
 \subsubsection*{Place Classification}
  
-      A very important piece of information that can help a robotic system to be able to distinguish between different place categories 
+A critical piece of information that can help a robotic system to be able to distinguish between different place categories 
 is knowing about the objects which are expected to be found in a specific category of a place. 
 
 If the robot is looking for a kitchen, it helps if it knows about some objects that are most probable to be found in it and 
 perhaps not in other places. 
-For instance a kitchen sink is such a discriminative object. 
-If the robot can find such an object in a place, it can obtain a good confidence about that place to be a kitchen. 
+For instance, a kitchen sink is such a discriminative object. 
+If the robot can find such an object in a place, it can obtain reasonable confidence about that place to be a kitchen. 
 
-{\it Viswanathan et al.} in \cite{P.Viswanathan}, also  pointed to the fact that object detection is a good prior for place 
-categorization. {\it T. Southey and J. J. Little} in \cite{southey2006object} argued that, {\it rooms} are defined by their geometric 
-properties, while definition of {\it places} is based on objects they contain and activities takes place in them.  
+{\it Viswanathan et al.} in \cite{P.Viswanathan}, also pointed to the fact that object detection is an excellent prior for place 
+categorization. {\it T. Southey and J. J. Little} in \cite{southey2006object} argued that {\it rooms} are defined by their geometric 
+properties, while the definition of {\it places} is based on objects they contain, and activities take place in them.  
 
-On the other hand, the place classification system would be more robust if it is able to recognize the place, using object information, 
+On the other hand, the place classification system would be more robust if it can recognize the place, using object information, 
 even when the actual object is not present in the place, but the presence is expected.
-Here is where the contextual model of object finds it's importance. When the context is present, there is no need to detect the actual 
-object for the purpose of classifying the place.
+Here is where the contextual model of the object finds its importance. When the context is present, there is no need to detect the actual 
+object to classify the place.
 
  
  
  \subsubsection*{Object Placement} 
  
  An intuitive application for the model of object context is finding a suitable location or surface to put an object.
- When a robot knows the context model of an object it can place it correctly by finding matches of that model in its 
+ When a robot knows the context model of an object, it can place it correctly by finding matches of that model in its 
  surrounding.
- For instance, a robot that performs typical household chores, like cleaning or serving guests can benefit from it.  
+ For instance, a robot that performs typical household chores, like cleaning or serving guests, can benefit from it.  
  
  %-----------------------------------------------------------------------------------------------------------------------
  %Until Here is moved from chapter 2 on April 21, 2021
