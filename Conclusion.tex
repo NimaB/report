@@ -2,19 +2,23 @@
 \chapter{Conclusion and future work}
 \label{Conclusion.ch}
 %------------------------------------------------------------------------
-In this thesis, we proposed a method to build 3D models of objects' context using geometrical features extracted
-from pointclouds of a scene or room.
-Point-clouds are produced using data from the Kinect sensor.
-A set of pointclouds is gathered from different place categories, including different objects to be used for experiments.
+In this thesis, we proposed a method to build 3D models for objects' context, using geometrical features extracted from pointclouds of scenes or rooms. Pointclouds are captured using {\it Microsoft Kinect} with {\it OpenNi} driver and {\it RGBDSLAM}.
+A set of pointclouds is gathered from different place categories, containing different objects. 
 
-Also, a metric and an evaluation method are proposed to assess the results as they are expected to be.
-% The context prediction of the system is expected to be a $superset$ of positive samples in the train set.
-% Despite the few pointclouds and instances of the objects used in experiments, the results are acceptable.  
 
-In addition, a method for employing the object context model in place categorization is proposed and analytically discussed.
-This work is unique regarding the suggestion of using 3D context models of objects in building a descriptor for places and also the use of full 
-pointclouds of a place. 
-These full pointclouds can be extended to a 3D map of an environment.
+Using our Annotation tool, we annotated some object classes in some of these pointclouds to be used as the source of our train samples. 
+We defined a descriptor for the context which can efficiently encode some valuable features into the model. 
+
+The descriptor consists of average height, pose, and the local geometry of the context. The definition of this descriptor includes a viewpoint for each of the feature vectors, which allows us to study the surfaces from several different directions. Therefore, the resulted model from this method is not limited to particular viewpoints. This was a limitation in most of the other works we reviewed in \ref{RelatedWork.sec}.
+The features extracted from entire pointclouds, with annotated objects, get divided into train and validation sets to be used by the SVM and build context models. In order to address the different formats used in the feature vector (floats and histograms), two kernels are used.
+
+Finally, models are applied to test data, and predictions are projected on their corresponding regions in the visualized pointclouds.
+
+Furthermore, we proposed a metric and an evaluation method to assess the results in a meaningful way. The results show that the proposed method is very effective for modeling and detecting the object's context. It can significantly {\bf reduces the search space} and {\bf the chance of having false positives} in object detection tasks. So it is providing a very useful prior for object detection. It should work for any ambient condition, and scaling issues applicable to 2D images do not apply to it. 
+
+Using our model and method, besides predicting the context of objects, it can suggest where, on, or around that detected context we should expect to find the object. This is another unique benefit of our method. It can be done using the {\it OPoints} from the pair of $(QPoint, OPoint)$ (see  \ref{FeatureExtract.ssec}). As mentioned, samples are extracted for several instances of this pair of points in test sets too. After applying the model on the test samples and getting the predictions, we assigned the predicted class to the $QPoints$ and if the prediction for it is context, marked the points belonging to the {\it Query blob} as the predicted context, which was the expected result from the system. Now, if we pick the $Opoint$ from the same sample, it represents a point that can potentially be an object point. This can help to show, for example, the object should be expected on which side of a surface that is detected as context. A desk's top surface can be detected as a context for a mouse. Using the $OPoint$, we can show that the mouse is expected to be above the surface and not on the other side. And it is less likely for a mouse to be very close to the edges of the desk or on the corners.
+
+In addition, we present a method for employing the object context model in place categorization.  In the next section, this method is analytically discussed. To the best of our knowledge, this work is a pioneer in suggesting to use 3D context models of objects in building place descriptors and using full pointclouds of places. These full pointclouds can be extended to a 3D map of an environment.
 
 \section{3D Object Context for place Classification}
 \label{3D Object Context for place Classification.sec}
@@ -26,20 +30,20 @@ can be added to and understood by the system.
 Adding semantic information to maps, to be used by mobile robots, enhances human-robot interaction.
 It helps in mobile robots localization and object detection.
 The ability of a robot to understand semantics of space and associate spatial locations with semantic terms 
-such as $kitchen$ or $corridor$, provides a more clear idea for the robot and its users of its location than a pure 
+such as {\it kitchen} or {\it corridor}, provides a more clear idea for the robot and its users of its location than a pure 
 topological or metric position \cite{pronobis2011phd}.   
 
 Regarding object detection, having semantic information of a place in association with a ground truth about the objects expected
 to be present in that place, makes the search for an object faster and more successful.
 It helps robotic systems to communicate with humans and interpret environments built by and for them.
 
-Concepts such as $office$ or $kitchen$ are different categories for a room based on its functionality.
+Concepts such as {\it office} or {\it kitchen} are different categories for a room based on its functionality.
 Other categorizations can be  based on its spatial properties such as its shape, size or general appearance.
 
 Figure ~\ref{semanticmapping.figure} shows an overview of a semantic mapping system proposed by Pronobis and Jensfelt in \cite{pronobis2011phd}.
 As it is illustrated in this picture, inputs to this system are models of objects, shape, size and appearance in the company of a 
 common-sense knowledge database.
-It is considered as a future work for this thesis that 3D $context$ $models$ replace $object$ $models$ in this system and with some improvements 
+It is considered as a future work for this thesis that 3D {\it context} models replace {\it object} models in this system and with some improvements 
 a more robust and complete representation for places would be achieved.
 
 \begin{figure}[t]
@@ -59,14 +63,14 @@ a more robust and complete representation for places would be achieved.
  reviewed here.
  
  Li and Perona in \cite{Li:2005:BHM:1068508.1069129} represented images of scenes as a collection of local regions 
- called codewords achieved from unsupervised learning. 
- Similarly, Lazebnik et al. in \cite{1641019} extended a bag-of-words approach in a computationally efficient way
+ called {\it codewords} achieved from unsupervised learning. 
+ Similarly, Lazebnik et al. in \cite{1641019} extended a {\it bag-of-words} approach in a computationally efficient way
  by introducing a spacial pyramid which contains approximate global geometric correspondences between local features.
   
- Olivia and Torralba proposed a scene representation called gist of the scene in \cite{oliva2006building} which is 
+ Olivia and Torralba proposed a scene representation called {\it gist of the scene} in \cite{oliva2006building} which is 
  used by Torralba et al. in \cite{TorralbaContextualPriming} and \cite{TrollbaContexBased} for place categorization.
- They used 2D object context information as mentioned in previous Chapters in their work.
- Later Quattoni and Torralba in \cite{quattoni2009recognizing} combined the gist of the scene with local features and 
+ They used 2D object context information as mentioned in previous chapters in their work.
+ Later, Quattoni and Torralba in \cite{quattoni2009recognizing} combined the gist of the scene with local features and 
  reported significant improvement in their results.
  
  Also in robotics, researchers worked through capturing some semantics mostly using laser range data.
@@ -97,7 +101,7 @@ Object detection in association of a common-sense knowledge database completes t
 \label{GroundTruth.sec}
 As mentioned before, a ground truth is needed to make the relation between the class of a place and object contexts 
 present in it.
-This knowledge can be achieved by analyzing available common-sense knowledge databases like \bf{Open Mind} \cite{OpenMind}, 
+This knowledge can be achieved by analyzing available common-sense knowledge databases like {\bf Open Mind} \cite{OpenMind}, 
 popular search engines such as Google Image Search, image repositories like Flicker or directly from a human user 
 inputs. 
 
@@ -163,7 +167,7 @@ The score for place categories should represent the followings:
 \begin{itemize}
  \item Probability of presence of an object class in a place.
  \item Weight or ratio for this presence.
- \item Based on a ground truth a probability of being an specific place category.
+ \item Based on a ground truth a probability of being a specific place category.
 \end{itemize}
 
 Applying context models on the point-cloud of a room, we get a subset of points with highest probability of being 

@@ -651,16 +651,16 @@ To prepare a dataset for our experiments, we needed to capture several pointclou
 include different object classes.
 
 
-To capture pointclouds, we used different tools:
-{\it RGBDSLAM} \cite{RGBDSLAM} is an open-source  package available in ROS. 
-A 3D model of a scene can be captured, Using this package and Kinect sensor with OpenNi driver.  
-The results are saved as pcd files.
-Pointclouds were captured from different types of places from KTH campus like offices, Kitchens and bathrooms, including 
-different types of objects that can be found in those places.
+% To capture pointclouds, we used different methods:\\
+
+To obtain some usable pointclouds, considering the requirements of our project, we used {\it Kinect} sensor with {\it OpenNi} driver. Benefitting from {\it RGBDSLAM} \cite{RGBDSLAM} which is an open-source package available in ROS, we recorded complete rooms in 3D.  
+The results are saved as pointclouds in pcd files.
+Pointclouds were captured from different categories of places from KTH campus like offices, Kitchens, and bathrooms, including different categories of objects found in those places.
 
 There is also a project in CVAP\footnote{Computer Vision and Active Perception lab.} at KTH called KINECT@HOME \cite{aydemir2012kinect} which is a web-based application that uses Kinect to build 3D mesh models of objects and places. 
 An excellent property of this system is that people from any part of the world capture their video with Kinect from different places and scenes and post the videos to a server where the 3D reconstruction happens. 
-Through this means a good dataset can be prepared to train and test models.
+
+Using this tool a good dataset can be prepared to train and test models.
 Of course, not all of the resulting pointclouds from this database are useful for our purpose due to the content and
 quality, but still, there are applicable ones.
 %but there were a lot of models that we chose among and 
@@ -671,9 +671,10 @@ quality, but still, there are applicable ones.
 % Data set
 All resulting pointclouds are saved, and an appropriate name gets assigned to them, based on their content.  
 Then, they are divided into three subsets of train, validation, and test. 
+
 Although samples from the same pointcloud could be divided into train and validation sets, we preferred to separate them from the pointcloud level to ensure reliable results. 
-Figure \ref{TrainClouds1.figure:edge} shows full pointclouds with a different type of trash bins annotated in them. 
-These are the pointclouds used in experiments.
+Figure \ref{TrainClouds1.figure:edge} shows full pointclouds with different types of trash bins annotated in them. 
+These are the pointclouds used in the experiments.
 %Each of these train and validation sets included different category of places.
 % Procedure
 
@@ -719,7 +720,7 @@ In Figure \ref{TrainClouds1Challenge.figure:edge}, we see examples of pointcloud
 
 
 Table \ref{Objects.table} includes names of four different object classes used in experiments and the number of train samples extracted for each of them.
-It also shows what fraction of those samples were positive samples that are actually samples captured from context point blobs.
+It also shows what fraction of those samples were positive ones that are samples captured from actual context point-blobs.
 
 
 \begin{table}
@@ -745,7 +746,7 @@ It also shows what fraction of those samples were positive samples that are actu
 \end{table}
 
 
-In experiments with four different object categories mentioned in table \ref{Objects.table}, a few different settings are considered to make the train set more general. So instances of objects are captured in different expected locations, heights, etc. Also, other objects that can be in the scene together with the object of interest (which can be a part of their context) are considered in these different settings. Therefore, in the resulting train set, each object has several instances in different scenes.
+In experiments with four different object categories mentioned in table \ref{Objects.table}, a few different settings are considered to make the train set more general. So, instances of objects are captured in different expected locations, heights, etc. Also, other objects that can be in the scene together with the object of interest (which can be a part of their context) are considered in these different settings. Therefore, in the resulting train set, each object has several instances in different scenes.
 (figures \ref{TrainClouds2.figure:tmt1} and \ref{TrainClouds2.figure:tmt2})
 
 \begin{figure} [htp]
@@ -764,13 +765,17 @@ In experiments with four different object categories mentioned in table \ref{Obj
 
 
 The acquired pointclouds are then taken through an automated workflow (python scripts) that picks a pointcloud from the input dataset, loads it into PreProcess module. Then the preprocessed pointclouds get annotated (labeling points belonging to objects of interest) in the Annotation tool.
+
 Some of the annotated pointclouds are used for training and some for validation. 
 For the ones used in validation, labels from annotation do not get used until after classification. This information is needed for evaluation which would be described in the next Section (~\ref{Results.sec}).
 
 
 In the next step, the annotated clouds and their normals (estimated in PreProcess) get loaded into the Feature extract module 
 and the resulting feature vectors are saved in a folder for the corresponding object class, under train or validation set, based on the set their source pointcloud belonged to.
-Then, a subset is randomly selected from the train samples to make the train set. As mentioned before, the distribution of positive and negative samples is significantly heavier for the negative ones. We have used train sets with 10 percent positive and 90 percent negative samples in the first experiments for trash bin. In later experiments and other objects, train sets are generated with all extracted positive samples and two times more negative samples. In these experiments, positive samples have a 33\% share in the train set. At this point, all data sets are scaled with the same parameters, and then the scaled train set is given to the SVM train to make the models for each of the object class's context. 
+
+Then, a subset is randomly selected from the train samples to make the train set. As mentioned before, the distribution of positive and negative samples is significantly heavier for the negative ones. We used train sets with 10 percent positive and 90 percent negative samples in the first experiments for trash bin. 
+
+In later experiments and other objects, train sets are generated with all extracted positive samples and two times more negative samples. In these experiments, positive samples have a 33\% share in the train set. The new distribution showed significant improvement in the resulting model. At this point, all data sets are scaled with the same parameters, and then the scaled train set is given to the SVM train to make the models for each of the object class's context. 
 
 
 Different values for the parameters are considered during training, and each resulting model is applied to samples from the validation
@@ -801,7 +806,9 @@ well (equation \ref{Lp-PpRelation.eq}).
  Lp \subset Pp
 \end{equation}
 
-In other words, from a good result, if we randomly pick a point that belongs to an actual instance of the object of interest, that point should be within the predicted positive points. A similar metric is used in the recently published and praised work \cite{aydemir2012_3Dcontext}.
+In other words, from a good result, if we randomly pick a point that belongs to an actual instance of the object of interest, that point should be within the predicted positive points. 
+
+A similar metric is used in the recently published and praised work \cite{aydemir2012_3Dcontext}.
 %if the predictions give us points of the pointcloud where there is a high probability of finding the object, it
 %would be what we want. 
 %The point here is, that the location of the object would be a subset of this predicted set. 
@@ -812,16 +819,15 @@ possible while it preserves the high probability of finding the object}.
 
 Equation ~\ref{Eval.eq} shows the evaluation metric, where $E(\tau)$ is the the value of the metric with respect to a 
 probability threshold $\tau$. 
-This threshold sets the boundary for the lowest probability value that the prediction for a point should have, to be 
-considered as positive. 
 %This threshold is assigned with a value in a loop that as a result in each iteration a top fraction of the samples are being 
 %picked and analyzed. 
-This threshold sets the boundary for the lowest probability value that the prediction for a point should have, to be considered as positive. 
+This threshold sets the minimum probability value that the prediction for a point should have, to be considered as positive. 
+
 The threshold is computed through a tuning process where its value gets changed in a loop. For each threshold value, the probability of having the labeled object within the positive predictions is calculated. The optimal outcome would be a value for the threshold, which results in the smallest subset of the pointcloud, predicted as positive, while the chance of finding the object in the predicted region stays \%100. For instance, the threshold takes a value that separates the top five percent of the points with respect to their prediction value. Then, the probability of having the object in this fraction of points is computed.
 
 
 $Pp_{\tau}$ is Predicted Positive sample with respect to the value of the threshold, and $n(x)$ is the number of 
-members in the set $x$, e.g., $n(Lp)$ it is the number of points belonging to $Lp$. $Lp$ is the 
+members in the set $x$, e.g., $n(Lp)$ is the number of points belonging to $Lp$. $Lp$ is the 
 labeled positive points in the dataset or, in other words, the annotated object.
 
 \begin{equation}
@@ -858,8 +864,8 @@ In this section, we look at some results and analyze and evaluate them to see ho
 
 \begin{figure}[t]
   \centerpsw{evalMorevalues}{0.85\columnwidth}
-  \caption[Evaluation diagram for experiments with Gaussian kernel.]
-  {Evaluation diagram for experiments with Gaussian kernel. Each line corresponds to a value for w-1.(Best viewed in color.)}
+  \caption[Evaluation diagram for experiments with a single Gaussian kernel.]
+  {Evaluation diagram for experiments with a single Gaussian kernel, applied on the whole feature vector. Each line corresponds to a value for w-1.(Best viewed in color.)}
   \label{evalSevenExp.figure}
 \end{figure}
 We have two sets of experiments; in the first one, the learning is done using one Gaussian kernel on the whole feature vector.
@@ -867,12 +873,12 @@ In the second set, we used two kernels of type chi-square with equal weights.
 One is applied on the first two fields of the feature vector(orientation and height) and the other on the VFH part.
 
 Figure ~\ref{evalSevenExp.figure} shows this evaluation for seven experiments with different values for w(-1) which is the 
-parameter setting the weight of the negative class in SVM classifier.
+parameter, setting the weight of the negative class in SVM classifier.
 In these experiments, a single Gaussian kernel is employed to build the model of trash bin context.
 The value is depicted with respect to the fraction of points considered.
 
 If we take the best models, it can be inferred from the curves that, for instance, considering the top five percent of the points 
-contains twenty percent of the object, which is a good result. 
+contains twenty percent of the object, which is not a bad result. 
 In other words, by reducing the search space to only five percent, we still have four times more a chance of finding the object.
 
 
@@ -882,7 +888,7 @@ The marked region shows the points with the highest probability values(top 1\%).
 This predicted context reaches the trash bin, which is present in the scene when the probability threshold reaches the 
 probability of the top 5\% of points.
 The interesting point is that this trained model is suggesting that the corner is the best location in this scene to find a 
-trash bin or put one (based on the train data).
+trash bin or place one (based on the train data).
 
 \begin{figure} [htp]
    \begin{center}
